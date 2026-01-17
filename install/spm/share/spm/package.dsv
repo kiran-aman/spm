@@ -1,0 +1,6 @@
+source;share/spm/hook/cmake_prefix_path.dsv
+source;share/spm/hook/cmake_prefix_path.sh
+source;share/spm/local_setup.bash
+source;share/spm/local_setup.dsv
+source;share/spm/local_setup.sh
+source;share/spm/local_setup.zsh

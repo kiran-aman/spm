@@ -1,0 +1,9 @@
+/home/kiran-aman/Documents/spm_ws/build/spm/CMakeFiles/uninstall.dir
+/home/kiran-aman/Documents/spm_ws/build/spm/CMakeFiles/spm_uninstall.dir
+/home/kiran-aman/Documents/spm_ws/build/spm/CMakeFiles/test.dir
+/home/kiran-aman/Documents/spm_ws/build/spm/CMakeFiles/edit_cache.dir
+/home/kiran-aman/Documents/spm_ws/build/spm/CMakeFiles/rebuild_cache.dir
+/home/kiran-aman/Documents/spm_ws/build/spm/CMakeFiles/list_install_components.dir
+/home/kiran-aman/Documents/spm_ws/build/spm/CMakeFiles/install.dir
+/home/kiran-aman/Documents/spm_ws/build/spm/CMakeFiles/install/local.dir
+/home/kiran-aman/Documents/spm_ws/build/spm/CMakeFiles/install/strip.dir

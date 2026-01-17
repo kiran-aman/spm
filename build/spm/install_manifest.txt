@@ -1,0 +1,15 @@
+/home/kiran-aman/Documents/spm_ws/install/spm/share/ament_index/resource_index/package_run_dependencies/spm
+/home/kiran-aman/Documents/spm_ws/install/spm/share/ament_index/resource_index/parent_prefix_path/spm
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/environment/ament_prefix_path.sh
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/environment/ament_prefix_path.dsv
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/environment/path.sh
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/environment/path.dsv
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/local_setup.bash
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/local_setup.sh
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/local_setup.zsh
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/local_setup.dsv
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/package.dsv
+/home/kiran-aman/Documents/spm_ws/install/spm/share/ament_index/resource_index/packages/spm
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/cmake/spmConfig.cmake
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/cmake/spmConfig-version.cmake
+/home/kiran-aman/Documents/spm_ws/install/spm/share/spm/package.xml
