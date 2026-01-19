@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!-- ALL VALUES ARE PLACEHOLDERS -->
+  <xacro:property name="joint_effort" value="3.0"/>
+  <xacro:property name="joint_velocity" value="6.28318"/>
+	<xacro:property name="joint_damping" value="0.0"/>
+	<xacro:property name="joint_friction" value="0.0"/>
+	
+	<xacro:property name="link_mass" value="0.1"/>
+	<xacro:property name="disk1_mass" value="0.12"/>
+	<xacro:property name="disk2_mass" value="0.13"/>
+	<xacro:property name="disk3_mass" value="0.14"/>
+	<xacro:property name="end_effector_mass" value="0.1"/>
+	<xacro:property name="probe_mass" value="0.05"/>
+	
+	<xacro:macro name="link_inertial" params="ixx iyy izz">
+		<inertial>
+			<origin xyz="0 0 0.0" rpy="0 0 0"/>
+			<mass value="${link_mass}"/>
+			<inertia
+				ixx="${ixx}" ixy="0.0" ixz="0.0"
+				iyy="${iyy}" iyz="0.0"
+				izz="${izz}"/>
+		</inertial>
+	</xacro:macro>
+	
+	<xacro:macro name="disk_inertial" params="mass ixx iyy izz">
+		<inertial>
+			<origin xyz="0 0 0.0" rpy="0 0 0"/>
+			<mass value="${mass}"/>
+			<inertia
+				ixx="${ixx}" ixy="0.0" ixz="0.0"
+				iyy="${iyy}" iyz="0.0"
+				izz="${izz}"/>
+		</inertial>
+	</xacro:macro>
+	
+	<xacro:macro name="material_visual" params="ref_link ambient diffuse specular">
+		<gazebo reference="${ref_link}">
+			<visual>
+				<material>
+					<ambient>${ambient}</ambient>
+					<diffuse>${diffuse}</diffuse>
+					<specular>${specular}</specular>
+				</material>
+			</visual>
+		</gazebo>
+	</xacro:macro>		
+	
+	<xacro:macro name="spm_mechanism" params="base_link flange_link prefix *origin">
+	
+	<!-- THESE FILES DO NOT EXIST YET -->
+	<!-- USE DETAILED STL/DAE FOR VISUAL, SIMPLIFIED STL FOR COLLISION -->
+		<link name="${prefix}link1">
+			<xacro:link_inertial ixx="0.0001" iyy="0.0001" izz="0.0001"/>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_visual.dae"/>
+				</geometry>
+				<origin xyz="0.0 0 0" rpy="0 0 ${-pi/2}"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_collision.stl"/>
+				</geometry>
+				<origin xyz="0.0 0 0" rpy="0 0 ${-pi/2}"/>
+			</collision>
+		</link>
+		
+		<link name="${prefix}link2">
+			<xacro:link_inertial ixx="0.0001" iyy="0.0001" izz="0.0001"/>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_visual.dae"/>
+				</geometry>
+				<origin xyz="0.0 0.1 0.1" rpy="0 0 ${-pi/2}"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_collision.stl"/>
+				</geometry>
+				<origin xyz="0.0 0.1 0.1" rpy="0 0 ${-pi/2}"/>
+			</collision>
+		</link>
+		
+		<link name="${prefix}link3">
+			<xacro:link_inertial ixx="0.0001" iyy="0.0001" izz="0.0001"/>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_visual.dae"/>
+				</geometry>
+				<origin xyz="0.0 0.1 0" rpy="0 0 ${-pi/2}"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_collision.stl"/>
+				</geometry>
+				<origin xyz="0.0 0.1 0" rpy="0 0 ${-pi/2}"/>
+			</collision>
+		</link>
+		
+		<!-- DISK LINKS -->
+		
+		<link name="base_link">
+			<visual>
+				<geometry>
+					<box size="0.1 0.1 0.01"/>
+				</geometry>
+			</visual>
+		</link>
+		
+		<link name="${prefix}disk1">
+			<xacro:disk_inertial mass="${disk1_mass}" ixx="0.0001" iyy="0.0001" izz="0.0001"/>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk1_visual.dae"/>
+				</geometry>
+				<origin xyz="0.0 0 0" rpy="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk1_collision.stl"/>
+				</geometry>
+				<origin xyz="0.0 0 0" rpy="0 0 0"/>
+			</collision>
+		</link>
+		
+		<link name="${prefix}disk2">
+			<xacro:disk_inertial mass="${disk2_mass}" ixx="0.0001" iyy="0.0001" izz="0.0001"/>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk2_visual.dae"/>
+				</geometry>
+				<origin xyz="0.0 0 0" rpy="0 0 ${(2*pi)/3}"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk2_collision.stl"/>
+				</geometry>
+				<origin xyz="0.0 0 0" rpy="0 0 ${(2*pi)/3}"/>
+			</collision>
+		</link>
+		
+		<link name="${prefix}disk3">
+			<xacro:disk_inertial mass="${disk3_mass}" ixx="0.0001" iyy="0.0001" izz="0.0001"/>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk3_visual.dae"/>
+				</geometry>
+				<origin xyz="0.0 0 0" rpy="0 0 ${(-1)*(2*pi)/3}"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk3_collision.stl"/>
+				</geometry>
+				<origin xyz="0.0 0 0" rpy="0 0 ${(-1)*(2*pi)/3}"/>
+			</collision>
+		</link>
+		
+		<!-- END EFFECTOR -->
+		
+		<link name="${prefix}end_effector">
+			<inertial>
+				<origin xyz="0 0 0.0" rpy="0 0 0"/>
+				<mass value="${end_effector_mass}"/>
+				<inertia
+					ixx="0.10" ixy="0.0" ixz="0.0"
+					iyy="0.05" iyz="0.0"
+					izz="0.15"/>
+			</inertial>
+			<visual>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/end_effector_visual.dae"/>
+				</geometry>
+				<origin xyz="0.0 0 0" rpy="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/end_effector_visual.stl"/>
+				</geometry>
+				<origin xyz="0.0 0 0" rpy="0 0 0"/>
+			</collision>
+		</link>
+		
+		<!-- BASE TO DISK JOINTS -->
+		
+		<joint name="${prefix}disk1_to_base" type="continuous">
+			<axis xyz="0 0 1"/>
+			<limit effort="${joint_effort}" velocity="${joint_velocity}"/>
+			<parent link="${prefix}base_link"/>
+			<child link="${prefix}disk1"/>
+			<xacro:insert_block name="origin"/>
+		</joint>
+
+	</xacro:macro>
+
+		
+		
+	
+	  
