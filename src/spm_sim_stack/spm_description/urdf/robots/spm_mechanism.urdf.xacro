@@ -13,10 +13,11 @@
 	<xacro:property name="disk3_mass" value="0.14"/>
 	<xacro:property name="end_effector_mass" value="0.1"/>
 	<xacro:property name="probe_mass" value="0.05"/>
+	<xacro:property name="disk_offset" value="0.01"/>
 	
 	<xacro:macro name="link_inertial" params="ixx iyy izz">
 		<inertial>
-			<origin xyz="0 0 0.0" rpy="0 0 0"/>
+			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			<mass value="${link_mass}"/>
 			<inertia
 				ixx="${ixx}" ixy="0.0" ixz="0.0"
@@ -27,7 +28,7 @@
 	
 	<xacro:macro name="disk_inertial" params="mass ixx iyy izz">
 		<inertial>
-			<origin xyz="0 0 0.0" rpy="0 0 0"/>
+			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			<mass value="${mass}"/>
 			<inertia
 				ixx="${ixx}" ixy="0.0" ixz="0.0"
@@ -48,7 +49,7 @@
 		</gazebo>
 	</xacro:macro>		
 	
-	<xacro:macro name="spm_mechanism" params="base_link flange_link prefix *origin">
+	<xacro:macro name="spm_mechanism" params="base_link flange_link prefix base_x base_y base_z">
 	
 	<!-- THESE FILES DO NOT EXIST YET -->
 	<!-- USE DETAILED STL/DAE FOR VISUAL, SIMPLIFIED STL FOR COLLISION -->
@@ -58,13 +59,13 @@
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_visual.dae"/>
 				</geometry>
-				<origin xyz="0.0 0 0" rpy="0 0 ${-pi/2}"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_collision.stl"/>
 				</geometry>
-				<origin xyz="0.0 0 0" rpy="0 0 ${-pi/2}"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
 		
@@ -74,13 +75,13 @@
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_visual.dae"/>
 				</geometry>
-				<origin xyz="0.0 0.1 0.1" rpy="0 0 ${-pi/2}"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_collision.stl"/>
 				</geometry>
-				<origin xyz="0.0 0.1 0.1" rpy="0 0 ${-pi/2}"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
 		
@@ -90,13 +91,13 @@
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_visual.dae"/>
 				</geometry>
-				<origin xyz="0.0 0.1 0" rpy="0 0 ${-pi/2}"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_collision.stl"/>
 				</geometry>
-				<origin xyz="0.0 0.1 0" rpy="0 0 ${-pi/2}"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
 		
@@ -116,13 +117,13 @@
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk1_visual.dae"/>
 				</geometry>
-				<origin xyz="0.0 0 0" rpy="0 0 0"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk1_collision.stl"/>
 				</geometry>
-				<origin xyz="0.0 0 0" rpy="0 0 0"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
 		
@@ -132,13 +133,13 @@
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk2_visual.dae"/>
 				</geometry>
-				<origin xyz="0.0 0 0" rpy="0 0 ${(2*pi)/3}"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk2_collision.stl"/>
 				</geometry>
-				<origin xyz="0.0 0 0" rpy="0 0 ${(2*pi)/3}"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
 		
@@ -148,13 +149,13 @@
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk3_visual.dae"/>
 				</geometry>
-				<origin xyz="0.0 0 0" rpy="0 0 ${(-1)*(2*pi)/3}"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk3_collision.stl"/>
 				</geometry>
-				<origin xyz="0.0 0 0" rpy="0 0 ${(-1)*(2*pi)/3}"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
 		
@@ -162,7 +163,7 @@
 		
 		<link name="${prefix}end_effector">
 			<inertial>
-				<origin xyz="0 0 0.0" rpy="0 0 0"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 				<mass value="${end_effector_mass}"/>
 				<inertia
 					ixx="0.10" ixy="0.0" ixz="0.0"
@@ -173,25 +174,47 @@
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/spm/visual/end_effector_visual.dae"/>
 				</geometry>
-				<origin xyz="0.0 0 0" rpy="0 0 0"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/end_effector_visual.stl"/>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/end_effector_collision.stl"/>
 				</geometry>
-				<origin xyz="0.0 0 0" rpy="0 0 0"/>
+				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
 		
 		<!-- BASE TO DISK JOINTS -->
 		
 		<joint name="${prefix}disk1_to_base" type="continuous">
-			<axis xyz="0 0 1"/>
+			<axis xyz="0.0 0.0 1.0"/>
 			<limit effort="${joint_effort}" velocity="${joint_velocity}"/>
 			<parent link="${prefix}base_link"/>
 			<child link="${prefix}disk1"/>
-			<xacro:insert_block name="origin"/>
+			<origin xyz="${base_x} ${base_y} ${base_z+disk_offset}" rpy="0.0 0.0 0.0"/>
+			<dynamics damping="${joint_damping}" friction="${joint_friction}"/>
 		</joint>
+
+		<joint name="${prefix}disk2_to_base" type="continuous">
+			<axis xyz="0.0 0.0 1.0"/>
+			<limit effort="${joint_effort}" velocity="${joint_velocity}"/>
+			<parent link="${prefix}base_link"/>
+			<child link="${prefix}disk2"/>
+			<origin xyz="${base_x} ${base_y} ${base_z+(2*disk_offset)}" rpy="0.0 0.0 0.0"/>
+			<dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+		</joint>
+
+		<joint name="${prefix}disk3_to_base" type="continuous">
+			<axis xyz="0.0 0.0 1.0"/>
+			<limit effort="${joint_effort}" velocity="${joint_velocity}"/>
+			<parent link="${prefix}base_link"/>
+			<child link="${prefix}disk3"/>
+			<origin xyz="${base_x} ${base_y} ${base_z+(3*disk_offset)}" rpy="0.0 0.0 0.0"/>
+			<dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+		</joint>
+
+		<!-- DISK TO LINK JOINTS -->		
+
 
 	</xacro:macro>
 
