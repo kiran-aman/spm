@@ -37,7 +37,7 @@
 		</inertial>
 	</xacro:macro>
 	
-	<xacro:macro name="material_visual" params="ref_link ambient diffuse specular">
+	<xacro:macro name="material_collision" params="ref_link ambient diffuse specular">
 		<gazebo reference="${ref_link}">
 			<visual>
 				<material>
@@ -49,15 +49,15 @@
 		</gazebo>
 	</xacro:macro>		
 	
-	<xacro:macro name="spm_mechanism" params="base_link flange_link prefix base_x base_y base_z">
+	<xacro:macro name="spm_mechanism" params="base_link prefix base_x base_y base_z">
 	
-	<!-- THESE FILES DO NOT EXIST YET -->
-	<!-- USE DETAILED STL/DAE FOR VISUAL, SIMPLIFIED STL FOR COLLISION -->
+	<!-- ONLY USING COLLISION MESHES FOR INITIAL TESTING -->
+	<!-- REMEMBER TO ADD VISUAL/COLLISION MESHES!!!!~ 
 		<link name="${prefix}link1">
 			<xacro:link_inertial ixx="0.0001" iyy="0.0001" izz="0.0001"/>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_visual.dae"/>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_collision.stl"/>
 				</geometry>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
@@ -73,7 +73,7 @@
 			<xacro:link_inertial ixx="0.0001" iyy="0.0001" izz="0.0001"/>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_visual.dae"/>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_collision.stl"/>
 				</geometry>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
@@ -89,7 +89,7 @@
 			<xacro:link_inertial ixx="0.0001" iyy="0.0001" izz="0.0001"/>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_visual.dae"/>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/link_collision.stl"/>
 				</geometry>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
@@ -100,7 +100,7 @@
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
-		
+		-->
 		<!-- DISK LINKS -->
 		
 		<link name="base_link">
@@ -115,13 +115,13 @@
 			<xacro:disk_inertial mass="${disk1_mass}" ixx="0.0001" iyy="0.0001" izz="0.0001"/>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk1_visual.dae"/>
+					<mesh filename="file://$(find spm_description)/meshes/disk1_collision.stl"/>
 				</geometry>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk1_collision.stl"/>
+					<mesh filename="file://$(find spm_description)/meshes/disk1_collision.stl"/>
 				</geometry>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
@@ -131,13 +131,13 @@
 			<xacro:disk_inertial mass="${disk2_mass}" ixx="0.0001" iyy="0.0001" izz="0.0001"/>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk2_visual.dae"/>
+					<mesh filename="file://$(find spm_description)/meshes/disk2_collision.stl"/>
 				</geometry>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk2_collision.stl"/>
+					<mesh filename="file://$(find spm_description)/meshes/disk2_collision.stl"/>
 				</geometry>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
@@ -147,19 +147,19 @@
 			<xacro:disk_inertial mass="${disk3_mass}" ixx="0.0001" iyy="0.0001" izz="0.0001"/>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk3_visual.dae"/>
+					<mesh filename="file://$(find spm_description)/meshes/disk3_collision.stl"/>
 				</geometry>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/disk3_collision.stl"/>
+					<mesh filename="file://$(find spm_description)/meshes/disk3_collision.stl"/>
 				</geometry>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
 		
-		<!-- END EFFECTOR -->
+		<!-- END EFFECTOR 
 		
 		<link name="${prefix}end_effector">
 			<inertial>
@@ -172,7 +172,7 @@
 			</inertial>
 			<visual>
 				<geometry>
-					<mesh filename="file://$(find spm_description)/meshes/spm/visual/end_effector_visual.dae"/>
+					<mesh filename="file://$(find spm_description)/meshes/spm/visual/end_effector_collision.stl"/>
 				</geometry>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</visual>
@@ -183,7 +183,7 @@
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
-		
+		-->
 		<!-- BASE TO DISK JOINTS -->
 		
 		<joint name="${prefix}disk1_to_base" type="continuous">
@@ -218,7 +218,7 @@
 
 	</xacro:macro>
 
-		
+</robot>
 		
 	
 	  
