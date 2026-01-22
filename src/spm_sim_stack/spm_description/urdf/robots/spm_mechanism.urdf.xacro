@@ -2,8 +2,8 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 	<!-- ALL VALUES ARE PLACEHOLDERS -->
-  <xacro:property name="joint_effort" value="3.0"/>
-  <xacro:property name="joint_velocity" value="6.28318"/>
+  	<xacro:property name="joint_effort" value="3.0"/>
+  	<xacro:property name="joint_velocity" value="6.28318"/>
 	<xacro:property name="joint_damping" value="0.0"/>
 	<xacro:property name="joint_friction" value="0.0"/>
 	
@@ -52,6 +52,11 @@
 	
 	<!-- ONLY USING COLLISION MESHES FOR INITIAL TESTING -->
 	<!-- REMEMBER TO ADD VISUAL/COLLISION MESHES!!!!~ -->
+
+		<!--############-->
+		<!-- LINK LINKS -->
+		<!--############-->
+
 		<link name="${prefix}link1">
 			<xacro:link_inertial ixx="0.0001" iyy="0.0001" izz="0.0001"/>
 			<visual>
@@ -100,7 +105,9 @@
 			</collision>
 		</link>
 		
+		<!--############-->
 		<!-- DISK LINKS -->
+		<!--############-->
 		
 		<link name="base_link"/>
 		
@@ -151,9 +158,13 @@
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
 			</collision>
 		</link>
+
+		<!--##############-->
+		<!-- END EFFECTOR -->
+		<!--##############-->
 		
-		<!-- END EFFECTOR 
-		
+		<link name="${prefix}virtual_primary_link"/>
+
 		<link name="${prefix}end_effector">
 			<inertial>
 				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
@@ -167,17 +178,19 @@
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/end_effector_collision.stl"/>
 				</geometry>
-				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+				<origin xyz="0.049496 0.0 0.039663" rpy="0.0 ${-pi/3} 0.0"/>
 			</visual>
 			<collision>
 				<geometry>
 					<mesh filename="file://$(find spm_description)/meshes/end_effector_collision.stl"/>
 				</geometry>
-				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+				<origin xyz="0.049496 0.0 0.039663" rpy="0.0 ${-pi/3} 0.0"/>
 			</collision>
 		</link>
-		-->
+		
+		<!--#####################-->
 		<!-- BASE TO DISK JOINTS -->
+		<!--#####################-->
 		
 		<joint name="${prefix}disk1_to_base" type="continuous">
 			<axis xyz="0.0 0.0 1.0"/>
@@ -206,7 +219,9 @@
 			<dynamics damping="${joint_damping}" friction="${joint_friction}"/>
 		</joint>
 
-		<!-- DISK TO LINK JOINTS -->		
+		<!--#####################-->
+		<!-- DISK TO LINK JOINTS -->	
+		<!--#####################-->	
 
 		<joint name="${prefix}link1_to_disk1" type="continuous">
 			<axis xyz="0.0 0.0 1.0"/>
@@ -235,7 +250,25 @@
 			<dynamics damping="${joint_damping}" friction="${joint_friction}"/>
 		</joint>
 
+		<!--#############################-->
 		<!-- LINK TO END EFFECTOR JOINTS -->
+		<!--#############################-->
+		
+		<joint name="${prefix}primary_joint_ref" type="fixed">
+			<parent link="${prefix}link1"/>
+			<child link="${prefix}virtual_primary_link"/>
+			<origin xyz="0.0 0.0 0.0" rpy="${-pi/4} 0.0 0.0"/>
+		</joint>
+
+		<joint name="${prefix}end_effector1_to_link1" type="continuous">
+			<axis xyz="0.0 0.0 1.0"/>
+			<limit effort="${joint_effort}" velocity="${joint_velocity}"/>
+			<parent link="${prefix}virtual_primary_link"/>
+			<child link="${prefix}end_effector"/>
+			<origin xyz="-0.059097 -0.060411 0.026633" rpy="0.0 ${pi/3} 0.0"/>
+			<dynamics damping="${joint_damping}" friction="${joint_friction}"/>
+		</joint>
+
 
 	</xacro:macro>
 
