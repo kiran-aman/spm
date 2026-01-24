@@ -35,7 +35,18 @@
 				izz="${izz}"/>
 		</inertial>
 	</xacro:macro>
-	
+
+	<xacro:macro name="virtual_link_inertial">
+		<inertial>
+			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+			<mass value="0.001"/>
+			<inertia
+			ixx="0.01" ixy="0.0" ixz="0.0"
+			iyy="0.01" iyz="0.0"
+			izz="0.01"/>
+		</inertial>
+	</xacro:macro>
+
 	<xacro:macro name="material_collision" params="ref_link ambient diffuse specular">
 		<gazebo reference="${ref_link}">
 			<visual>
@@ -109,7 +120,10 @@
 		<!-- DISK LINKS -->
 		<!--############-->
 		
-		<link name="base_link"/>
+		<link name="base_link">
+			<xacro:virtual_link_inertial/>
+		</link>
+
 		
 		<link name="${prefix}disk1">
 			<xacro:disk_inertial mass="${disk1_mass}" ixx="0.0001" iyy="0.0001" izz="0.0001"/>
@@ -163,7 +177,17 @@
 		<!-- END EFFECTOR -->
 		<!--##############-->
 		
-		<link name="${prefix}virtual_primary_link"/>
+		<link name="${prefix}virtual_primary_link">
+			<xacro:virtual_link_inertial/>
+		</link>
+
+		<link name="${prefix}virtual_link2">
+			<xacro:virtual_link_inertial/>
+		</link>
+
+		<link name="${prefix}virtual_link3">
+			<xacro:virtual_link_inertial/>
+		</link>
 
 		<link name="${prefix}end_effector">
 			<inertial>
@@ -260,6 +284,11 @@
 			<origin xyz="0.0 0.0 0.0" rpy="${-pi/4} 0.0 0.0"/>
 		</joint>
 
+		<joint name="${prefix}virtual_joint2" type="fixed">
+			<parent link="${prefix}end_effector"/>
+			<child link="${prefix}virtual_link2"/>
+			
+
 		<joint name="${prefix}end_effector1_to_link1" type="continuous">
 			<axis xyz="0.0 0.0 1.0"/>
 			<limit effort="${joint_effort}" velocity="${joint_velocity}"/>
@@ -268,6 +297,19 @@
 			<origin xyz="-0.059097 -0.060411 0.026633" rpy="0.0 ${pi/3} 0.0"/>
 			<dynamics damping="${joint_damping}" friction="${joint_friction}"/>
 		</joint>
+
+
+
+		<!--
+		<gazebo>
+			<joint name="${prefix}end_effector2_to_link2" type="continuous">
+				<parent>link2</parent>
+				<child>end_effector</child>
+				<pose>0 0 0 0 0 0</pose>
+				<axis><xyz>0 0 1</xyz></axis>
+			</joint>
+		</gazebo>
+				-->	
 
 
 	</xacro:macro>

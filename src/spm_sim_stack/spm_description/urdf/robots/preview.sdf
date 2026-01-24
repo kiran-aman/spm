@@ -1,0 +1,407 @@
+<sdf version='1.11'>
+  <model name='spm'>
+    <link name='base_link'>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.001</mass>
+        <inertia>
+          <ixx>0.01</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.01</iyy>
+          <iyz>0</iyz>
+          <izz>0.01</izz>
+        </inertia>
+      </inertial>
+    </link>
+    <joint name='disk1_to_base' type='revolute'>
+      <pose relative_to='base_link'>0 0 0 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>disk1</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>3</effort>
+          <velocity>6.2831799999999998</velocity>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <damping>0</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='disk1'>
+      <pose relative_to='disk1_to_base'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.12</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0001</iyy>
+          <iyz>0</iyz>
+          <izz>0.0001</izz>
+        </inertia>
+      </inertial>
+      <collision name='disk1_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/disk1_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='disk1_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/disk1_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='link1_to_disk1' type='revolute'>
+      <pose relative_to='disk1'>0 0.060410999999999999 0.036634 0.78539816339744839 0 0</pose>
+      <parent>disk1</parent>
+      <child>link1</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>3</effort>
+          <velocity>6.2831799999999998</velocity>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <damping>0</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='link1'>
+      <pose relative_to='link1_to_disk1'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.10000000000000001</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0001</iyy>
+          <iyz>0</iyz>
+          <izz>0.0001</izz>
+        </inertia>
+      </inertial>
+      <collision name='link1_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/link_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='link1_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/link_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='end_effector1_to_link1' type='revolute'>
+      <pose relative_to='link1'>-0.059096999999999997 -0.023884652854919201 0.061549402661601839 -1.10714871779409 0.65905803582640943 -0.88607712379261327</pose>
+      <parent>link1</parent>
+      <child>end_effector</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>3</effort>
+          <velocity>6.2831799999999998</velocity>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <damping>0</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='end_effector'>
+      <pose relative_to='end_effector1_to_link1'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.10000000000000001</mass>
+        <inertia>
+          <ixx>0.10000000000000001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.050000000000000003</iyy>
+          <iyz>0</iyz>
+          <izz>0.14999999999999999</izz>
+        </inertia>
+      </inertial>
+      <collision name='end_effector_collision'>
+        <pose>0.049495999999999998 0 0.039662999999999997 0 -1.0471975511965981 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/end_effector_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='end_effector_visual'>
+        <pose>0.049495999999999998 0 0.039662999999999997 0 -1.0471975511965981 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/end_effector_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='disk2_to_base' type='revolute'>
+      <pose relative_to='base_link'>0 0 -0.00381 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>disk2</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>3</effort>
+          <velocity>6.2831799999999998</velocity>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <damping>0</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='disk2'>
+      <pose relative_to='disk2_to_base'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.13</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0001</iyy>
+          <iyz>0</iyz>
+          <izz>0.0001</izz>
+        </inertia>
+      </inertial>
+      <collision name='disk2_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/disk2_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='disk2_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/disk2_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='link2_to_disk2' type='revolute'>
+      <pose relative_to='disk2'>0.052317000000000002 -0.030206 0.040444000000000001 0.7853981633974485 -5.5511151231257827e-17 -2.0943951023931948</pose>
+      <parent>disk2</parent>
+      <child>link2</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>3</effort>
+          <velocity>6.2831799999999998</velocity>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <damping>0</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='link2'>
+      <pose relative_to='link2_to_disk2'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.10000000000000001</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0001</iyy>
+          <iyz>0</iyz>
+          <izz>0.0001</izz>
+        </inertia>
+      </inertial>
+      <collision name='link2_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/link_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='link2_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/link_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='disk3_to_base' type='revolute'>
+      <pose relative_to='base_link'>0 0 0.011429999999999999 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>disk3</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>3</effort>
+          <velocity>6.2831799999999998</velocity>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <damping>0</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='disk3'>
+      <pose relative_to='disk3_to_base'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.14000000000000001</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0001</iyy>
+          <iyz>0</iyz>
+          <izz>0.0001</izz>
+        </inertia>
+      </inertial>
+      <collision name='disk3_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/disk3_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='disk3_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/disk3_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='link3_to_disk3' type='revolute'>
+      <pose relative_to='disk3'>-0.052317000000000002 -0.030206 0.025204000000000001 0.7853981633974485 5.5511151231257827e-17 2.0943951023931948</pose>
+      <parent>disk3</parent>
+      <child>link3</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <effort>3</effort>
+          <velocity>6.2831799999999998</velocity>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+        <dynamics>
+          <damping>0</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='link3'>
+      <pose relative_to='link3_to_disk3'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.10000000000000001</mass>
+        <inertia>
+          <ixx>0.0001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0001</iyy>
+          <iyz>0</iyz>
+          <izz>0.0001</izz>
+        </inertia>
+      </inertial>
+      <collision name='link3_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/link_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='link3_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/kiran-aman/Documents/spm_ws/install/spm_description/share/spm_description/meshes/link_collision.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='end_effector2_to_link2' type='continuous'>
+      <parent>link2</parent>
+      <child>end_effector</child>
+      <pose>0 0 0 0 0 0</pose>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-inf</lower>
+          <upper>inf</upper>
+        </limit>
+      </axis>
+    </joint>
+    <frame name='primary_joint_ref' attached_to='link1'>
+      <pose>0 0 0 -0.78539816339744839 0 0</pose>
+    </frame>
+    <frame name='virtual_primary_link' attached_to='primary_joint_ref'>
+      <pose>0 0 0 0 0 0</pose>
+    </frame>
+  </model>
+</sdf>
