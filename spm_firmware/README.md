@@ -3,10 +3,13 @@
 ## driver_teensy41
 main driver board for motor control loop + inverse kinematics calculations
 
-driver_teensy41
-└── src/
+```
+driver_teensy41  
+└── src/  
     ├── main.cpp
+    ├── teensy41_config.h            # pins config
     ├── kinematics/
+    |   ├── machine_params.h       # spm params for kinematics
     │   ├── ik.cpp / ik.h          # inverse kinematics
     │   └── fk.cpp / fk.h          # forward kinematics
     ├── drivers/
@@ -17,7 +20,7 @@ driver_teensy41
     │   └── pid.cpp / .h           # motor pid loop
     └── comms/
         └── ros_interface.cpp / .h # micro-ROS pub/sub
-
+```
 
 ## platform_esp32c6
 board used on end effector platform to wirelessly transmit data from bno085 imu via esp32now
