@@ -1,3 +1,3 @@
 # Coaxial 3-RRR Spherical Parallel Manipulator (SPM)
 
-## Full control system for home-grown spm mechanism using ROS2 and Gazebo (in progress)
+## control system for coaxial 3-rrr spherical parallel manipulator on teensy 4.1 and esp32. includes simulation with gazebo and digital twin via ros2
