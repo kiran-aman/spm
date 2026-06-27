@@ -10,19 +10,19 @@
       </td>
       <!-- First small GIF on the right -->
       <td>
-        <img src="https://github.com/user-attachments/assets/2df9ba47-61f0-445a-bf78-066a371a81d4" width="225" alt="Small GIF 1" />
+        <img src="https://github.com/user-attachments/assets/2df9ba47-61f0-445a-bf78-066a371a81d4?raw=true" width="225" alt="Small GIF 1" />
       </td>
     </tr>
     <tr>
       <!-- Second small GIF on the right -->
       <td>
-        <img src="https://github.com/user-attachments/assets/92de9cdf-b370-4f38-93d2-e5c22a2ae110" width="225" alt="Small GIF 2" />
+        <img src="https://github.com/user-attachments/assets/92de9cdf-b370-4f38-93d2-e5c22a2ae110?raw=true" width="225" alt="Small GIF 2" />
       </td>
     </tr>
     <tr>
       <!-- Third small GIF on the right -->
       <td>
-        <img src="https://github.com/user-attachments/assets/786b5836-3cfa-40c4-b225-a840a37c23b2" width="225" alt="Small GIF 3" />
+        <img src="https://github.com/user-attachments/assets/786b5836-3cfa-40c4-b225-a840a37c23b2?raw=true" width="225" alt="Small GIF 3" />
       </td>
     </tr>
   </table>
