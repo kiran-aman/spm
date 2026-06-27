@@ -4,26 +4,27 @@
 <div align="center">
   <table>
     <tr>
-      <!-- The tall image on the left -->
+      <!-- The tall image on the left spans all 3 rows -->
       <td rowspan="3">
         <img src="https://github.com/user-attachments/assets/26478f5c-b936-4b46-900b-e5ec1d959de7" width="500" alt="Tall Main Picture" />
       </td>
-      <!-- First small GIF on the right -->
+      <!-- Row 1 right side -->
       <td>
-        <img src="https://github.com/user-attachments/assets/2df9ba47-61f0-445a-bf78-066a371a81d4?raw=true" width="225" alt="Small GIF 1" />
+        <img src="https://github.com/user-attachments/assets/9539d420-d672-46e3-af1d-bf7350fe3b23?raw=true" width="225" alt="Small GIF 1" />
       </td>
     </tr>
     <tr>
-      <!-- Second small GIF on the right -->
+      <!-- Row 2 right side -->
       <td>
-        <img src="https://github.com/user-attachments/assets/92de9cdf-b370-4f38-93d2-e5c22a2ae110?raw=true" width="225" alt="Small GIF 2" />
+        <img src="https://github.com/user-attachments/assets/554e3f9e-d0cf-429b-919d-dce808206e2c?raw=true" width="225" alt="Small GIF 2" />
       </td>
     </tr>
     <tr>
-      <!-- Third small GIF on the right -->
+      <!-- Row 3 right side (Added missing tr tag wrapper) -->
       <td>
-        <img src="https://github.com/user-attachments/assets/786b5836-3cfa-40c4-b225-a840a37c23b2?raw=true" width="225" alt="Small GIF 3" />
+        <img src="https://github.com/user-attachments/assets/7e3b4d92-11b7-4cc3-826d-0ba2fa172675?raw=true" width="225" alt="Small GIF 3" />
       </td>
     </tr>
   </table>
 </div>
+
