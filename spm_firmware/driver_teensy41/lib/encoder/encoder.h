@@ -2,8 +2,8 @@
 
 #include <Arduino.h>
 #include <QuadEncoder.h>
-#include "../teensy41_config.h"
-#include "../machine_params.h"
+#include "teensy41_config.h"
+#include "machine_params.h"
 
 void encoder_init_all();
  

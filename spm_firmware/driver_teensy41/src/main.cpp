@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "drivers/tmc2209.h"
-#include "drivers/encoder.h"
-#include "drivers/stepper.h"
+#include "tmc2209.h"
+#include "encoder.h"
+#include "stepper_driver.h"
 
 // state machine for testing
 enum class BringupState {

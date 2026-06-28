@@ -1,4 +1,4 @@
-#include "stepper.h"
+#include "stepper_driver.h"
 
 // Steps per degree at output shaft (microsteps * gear ratio / 360)
 static constexpr float STEPS_PER_DEG =

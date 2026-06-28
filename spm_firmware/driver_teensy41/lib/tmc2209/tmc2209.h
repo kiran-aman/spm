@@ -2,8 +2,8 @@
 
 #include <Arduino.h>
 #include <TMCStepper.h>
-#include "../teensy41_config.h"
-#include "../machine_params.h"
+#include "teensy41_config.h"
+#include "machine_params.h"
 
 extern TMC2209Stepper tmc1;
 extern TMC2209Stepper tmc2;
