@@ -11,5 +11,5 @@ extern TMC2209Stepper tmc3;
 
 void tmc_init_all();
 void tmc_enable(bool en);               // toggle enable pin (e-stop)
-bool tmc_stall_detected(uint8_t motor); // stall guard (homing/crash detection)
+bool tmc_detect_stall(uint8_t motor); // stall guard (homing/crash detection)
 void tmc_print_status(uint8_t motor);   // debugging
