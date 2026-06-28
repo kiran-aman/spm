@@ -6,7 +6,7 @@
     <tr>
       <!-- The tall image on the left spans all 3 rows -->
       <td rowspan="3">
-        <img src="https://github.com/user-attachments/assets/26478f5c-b936-4b46-900b-e5ec1d959de7" width="500" alt="Tall Main Picture" />
+        <img src="https://github.com/user-attachments/assets/d7fb10b2-331c-4ca2-a907-060c54faf143" width="550" alt="Tall Main Picture" />
       </td>
       <!-- Row 1 right side -->
       <td>
@@ -27,4 +27,3 @@
     </tr>
   </table>
 </div>
-
