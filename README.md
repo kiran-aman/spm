@@ -1,6 +1,8 @@
 # Coaxial 3-RRR Spherical Parallel Manipulator (SPM)
 
 ## control system for coaxial 3-rrr spherical parallel manipulator on teensy 4.1 and esp32. includes simulation with gazebo and digital twin via ros2
+
+### design of current iteration (v2) and matlab simulation of previous iteration (v1)
 <div align="center">
   <table>
     <tr>
@@ -26,4 +28,10 @@
       </td>
     </tr>
   </table>
+</div>
+<br>
+
+### inverse kinematics trajectory generation (3rd order polynomial) + verification (forward kinematics using newton-raphson) of current iteration; error on order of e-13. based on Cruz-Reyes et al.
+<div align="center">
+  <img width="1000" alt="image" src="https://github.com/user-attachments/assets/87804548-89f3-4ffc-aa93-ebdca8287da7" />
 </div>
