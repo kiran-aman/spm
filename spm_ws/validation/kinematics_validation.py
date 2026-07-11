@@ -16,36 +16,61 @@ def cubic_trajectory(t, t_f, q_f):
 
 # validation
 def main():
-    print("=" * 60)
-    print("IK/FK Validation — Cruz-Reyes et al.")
     print(f"alpha1={np.degrees(spm.ALPHA1):.1f} deg  "
           f"alpha2={np.degrees(spm.ALPHA2):.1f} deg  "
           f"beta={np.degrees(spm.BETA):.1f} deg")
-    print("=" * 60)
 
-    # Trajectory: yaw 0 -> 30 deg over 1 second, roll=pitch=0
-    t_f   = 1.0
-    roll_f = np.radians(30.0)
-    N     = 100
-    times = np.linspace(0, t_f, N)
+    t_f    = 5.0 # final time general
+    t_pitch = 0.25 # final time for roll command
 
-    roll_traj    = np.array([cubic_trajectory(t, t_f, roll_f) for t in times])
+    roll_f = np.radians(720.0) # final positions
+    pitch_f = np.radians(40.0)
+    yaw_f = np.radians(0.0)
+    N      = int(t_f * 100) # generally
+    times  = np.linspace(0, t_f, N)
+
+    # trajectory generation
+    roll_traj = np.array([cubic_trajectory(t, t_f, roll_f) for t in times])
+    pitch_traj = np.array([cubic_trajectory(np.minimum(t, t_pitch), t_pitch, pitch_f) for t in times])
+    yaw_traj   = np.array([cubic_trajectory(t, t_f, yaw_f) for t in times])
     theta_traj  = np.zeros((N, 3))
     rpy_fk_traj = np.zeros((N, 3))
 
     print("\nRunning IK along trajectory...")
-    for k, (t, roll) in enumerate(zip(times, roll_traj)):
-        thetas = spm.ik(roll, 0.0, 0.0)
+    prev_thetas = np.radians([60.0, 60.0, 60.0])
+    for k, (roll, pitch, yaw) in enumerate(zip(roll_traj, pitch_traj, yaw_traj)):
+        thetas = spm.ik(roll, pitch, yaw, prev_thetas=prev_thetas)
         if thetas is None:
-            print(f"  IK failed at t={t:.3f}s, roll={np.degrees(roll):.2f} deg")
+            print(f"  IK failed at t={times[k]:.3f}s")
             return
         theta_traj[k] = thetas
+        prev_thetas = thetas
 
+    # run fk with warm start for solver (previous position conventionally)
     print("IK complete. Running FK verification...")
+    last_known_orientation = np.array([0.0, 0.0, 0.0])
     for k, thetas in enumerate(theta_traj):
-        rpy = spm.fk(thetas)
+        rpy = spm.fk(thetas, initial_guess=last_known_orientation)
         rpy_fk_traj[k] = rpy
+        last_known_orientation = rpy
 
+    # <---- ANALYSIS ---->
+    max_err = 0
+    for k in range(N):
+        R = spm.rotation_matrix(roll_traj[k], pitch_traj[k], 0)
+        vi_home_vecs = spm.get_vi_home(spm.BETA)
+        for i in range(3):
+            eta_i = 2 * i * np.pi / 3
+            vi = R @ vi_home_vecs[i]
+            phi_i = eta_i - theta_traj[k,i]
+            wi = np.array([
+                np.cos(phi_i) * np.sin(spm.ALPHA1),
+                np.sin(phi_i) * np.sin(spm.ALPHA1),
+                -np.cos(spm.ALPHA1)
+            ])
+            err = abs(np.dot(wi, vi) - np.cos(spm.ALPHA2))
+            max_err = max(max_err, err)
+    print(f"Max constraint error: {max_err:.2e}")
     # round trip error
     roll_fk_deg    = np.degrees(rpy_fk_traj[:, 0])
     roll_input_deg = np.degrees(roll_traj)
@@ -74,10 +99,12 @@ def main():
 
     # Input trajectory
     ax = axes[0, 0]
-    ax.plot(times, np.degrees(roll_traj), 'b-')
+    ax.plot(times, np.degrees(roll_traj), 'r-', label='Roll')
+    ax.plot(times, np.degrees(pitch_traj), 'g-', label='Pitch')
+    ax.plot(times, np.degrees(yaw_traj), 'b-', label='Yaw')
     ax.set_xlabel("time (s)")
     ax.set_ylabel("roll (deg)")
-    ax.set_title("input trajectory (roll)")
+    ax.set_title("input trajectories")
     ax.grid(True)
 
     # IK joint angles
