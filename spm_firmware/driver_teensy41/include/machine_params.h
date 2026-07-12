@@ -2,14 +2,14 @@
 
 // PLACEHOLDERS
 // kinematics constants
-#define ALPHA1  0.0f
-#define ALPHA2  0.0f
-#define BETA    0.0f
+#define ALPHA1  60.0f
+#define ALPHA2  51.315f
+#define BETA    59.99f
 
 // motion transmission constants
-#define TEETH_INPUT     48
+#define TEETH_INPUT     40
 #define TEETH_OUTPUT    60
-#define GEAR_RATIO      (60.0f/48.0f)
+#define GEAR_RATIO      (60.0f/40.0f)
 
 // stepper parameters
 #define STEPS_PER_REV       200
