@@ -6,7 +6,7 @@
 struct IKResult {
     float theta[3]; // joint angles (theta_i)
     bool valid; // false for invalid position
-}
+};
 
 // ik solver; weird convention -> x (yaw), y (pitch), z (roll)
 // uses branch tracking to select correct configuration

@@ -22,6 +22,14 @@ void stepper_init_all() {
     Serial.println("teensystep4 initialized successfully");
 }
 
+void stepper_spin(uint8_t motor) {
+    switch (motor) {
+        case 1: s1.rotateAsync(0.25); break;
+        case 2: s2.rotateAsync(0.25); break;
+        case 3: s3.rotateAsync(0.25); break;
+    }
+}
+
 void stepper_move_to(uint8_t motor, int32_t steps) {
     // write target position to target
     target[motor-1] = steps;

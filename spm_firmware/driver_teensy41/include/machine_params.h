@@ -18,7 +18,7 @@
 #define ENCODER_CPR         4000
 
 // tmc2209 parameters
-#define RMS_CURRENT_MA     1200
+#define RMS_CURRENT_MA     500 // 500 FOR NEMA 11 V1 TEST
 #define TMC_RSENSE         0.11f
 
 // motion limits

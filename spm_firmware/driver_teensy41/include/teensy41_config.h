@@ -30,10 +30,10 @@
 #define MOT3_DIR_PIN    25
 
 // common tmc2209 enable
-#define MOT_ENABLE_PIN  28
+#define MOT_ENABLE_PIN  27
 
 // tmc2209 diag
-#define TMC1_DIAG_PIN   27
+#define TMC1_DIAG_PIN   28
 #define TMC2_DIAG_PIN   29
 #define TMC3_DIAG_PIN   30
 
