@@ -23,5 +23,5 @@
 #define TMC_RSENSE         0.11f
 
 // motion limits
-#define MAX_SPEED_HZ    10000   // steps/sec
-#define MAX_ACCEL_HZ    10000    // steps/sec^2
+#define MAX_SPEED_HZ    20000   // steps/sec
+#define MAX_ACCEL_HZ    100000    // steps/sec^2

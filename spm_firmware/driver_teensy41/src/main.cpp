@@ -11,7 +11,7 @@ static constexpr uint32_t CTRL_US   = 1000000 / CTRL_HZ;
 static constexpr float    CTRL_DT   = 1.0f / CTRL_HZ;
 static uint32_t _last_ctrl_us = 0;
 
-static StepperGroup stepper_group = {&s1, &s2, &s3};
+static StepperGroup stepper_group = {s1, s2, s3};
 
 // trajectory
 static TrajectoryInterpolator traj;
@@ -47,13 +47,13 @@ static void control_loop() {
 
     t1 = micros();
     IKResult result = ik(target.roll, target.pitch, target.yaw);
-    Serial.printf("[TRAJ] target: roll=%.2f pitch=%.2f yaw=%.2f deg\n",
-        degrees(target.roll), degrees(target.pitch), degrees(target.yaw));
-    Serial.printf("%.4f,%.4f,%.4f\n",
-                    degrees(result.theta[0]),
-                    degrees(result.theta[1]),
-                    degrees(result.theta[2]));
-    Serial.println(result.theta[0] == result.theta[1] && result.theta[1] == result.theta[2]);
+    // Serial.printf("[TRAJ] target: roll=%.2f pitch=%.2f yaw=%.2f deg\n",
+    //     degrees(target.roll), degrees(target.pitch), degrees(target.yaw));
+    // Serial.printf("%.4f,%.4f,%.4f\n",
+    //                 degrees(result.theta[0]),
+    //                 degrees(result.theta[1]),
+    //                 degrees(result.theta[2]));
+    // Serial.println(result.theta[0] == result.theta[1] && result.theta[1] == result.theta[2]);
  
     t2 = micros();
     if (!result.valid) {
@@ -66,26 +66,19 @@ static void control_loop() {
     for (uint8_t i = 1; i <= 3; i++) {
         float target_deg  = degrees(result.theta[i-1]);
         float delta_deg   = target_deg - _prev_target_deg[i];
-        int32_t delta_steps = (int32_t)roundf(delta_deg * STEPS_PER_DEG);
+        float speed_hz = delta_deg * STEPS_PER_DEG * CTRL_HZ;
 
-        if (delta_steps == 0) {
-            _prev_target_deg[i] = target_deg;
-            continue;
-        }
+        stepper_set_speed(i, fabs(speed_hz) / MAX_SPEED_HZ); // set speed as fraction of max speed
 
-        float speed_hz = fabsf(delta_steps) * CTRL_HZ;
-        speed_hz = constrain(speed_hz, 1.0f, (float)MAX_SPEED_HZ);
-
-        // stepper_set_speed(i, speed_hz);
-        stepper_move_rel(i, delta_steps);
         _prev_target_deg[i] = target_deg;
         // delay(50);
     }
 
- 
-    // stepper_move_to_deg(1, degrees(result.theta[0]) - 60.0f); // offset for home position
-    // stepper_move_to_deg(2, degrees(result.theta[1]) - 60.0f);
-    // stepper_move_to_deg(3, degrees(result.theta[2]) - 60.0f);
+    // stepper_move_to_deg(1, degrees(result.theta[0]) - 90.0f); // offset for home position
+    // stepper_move_to_deg(2, degrees(result.theta[1]) - 90.0f);
+    // stepper_move_to_deg(3, degrees(result.theta[2]) - 90.0f);
+    // stepper_group.move();  // non-blocking run for all motors
+
     t3 = micros();
 
     // // print every 100 iterations
@@ -102,6 +95,7 @@ static void control_loop() {
         Serial.printf("final time: %.3f sec\n", (millis() - timer) * 1e-3f);
         timer = millis();
     }
+    // delay(1);
 }
 
 

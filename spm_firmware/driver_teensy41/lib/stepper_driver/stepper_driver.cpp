@@ -13,6 +13,9 @@ void stepper_init_all() {
     for (Stepper* s : {&s1, &s2, &s3}) {
         s->setMaxSpeed(MAX_SPEED_HZ);
         s->setAcceleration(MAX_ACCEL_HZ);
+
+        s->rotateAsync(); // initialize with zero speed
+        s->overrideSpeed(0.1f); // override speed to zero
     }
 
     Serial.println("teensystep4 initialized successfully");
@@ -31,9 +34,9 @@ void stepper_move_to(uint8_t motor, int32_t steps) {
     target[motor-1] = steps;
 
     switch (motor) {
-        case 1: s1.moveAbsAsync(steps); break;
-        case 2: s2.moveAbsAsync(steps); break;
-        case 3: s3.moveAbsAsync(steps); break;
+        case 1: s1.setTargetAbs(steps); break;
+        case 2: s2.setTargetAbs(steps); break;
+        case 3: s3.setTargetAbs(steps); break;
     }
 }
 
@@ -59,11 +62,11 @@ void stepper_stop(uint8_t motor) {
     }
 }
 
-void stepper_set_speed(uint8_t motor, float speed_hz) {
+void stepper_set_speed(uint8_t motor, float prop) {
     switch (motor) {
-        case 1: s1.setMaxSpeed(speed_hz); break;
-        case 2: s2.setMaxSpeed(speed_hz); break;
-        case 3: s3.setMaxSpeed(speed_hz); break;
+        case 1: s1.overrideSpeed(prop); break;
+        case 2: s2.overrideSpeed(prop); break;
+        case 3: s3.overrideSpeed(prop); break;
     }
 }
 

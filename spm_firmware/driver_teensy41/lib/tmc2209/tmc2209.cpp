@@ -45,9 +45,9 @@ void tmc_init_all() {
 
     // confirmation (0 = success)
     Serial.println("tmc initialization success");
-    Serial.printf("TMC1 Link: %d\n", tmc1.test_connection());
-    Serial.printf("TMC2 Link: %d\n", tmc2.test_connection());
-    Serial.printf("TMC3 Link: %d\n", tmc3.test_connection());
+    Serial.printf("TMC1 Link: %d, microstepping: %d\n", tmc1.test_connection(), tmc1.microsteps());
+    Serial.printf("TMC2 Link: %d, microstepping: %d\n", tmc2.test_connection(), tmc2.microsteps());
+    Serial.printf("TMC3 Link: %d, microstepping: %d\n", tmc3.test_connection(), tmc3.microsteps());
 
 }
 
