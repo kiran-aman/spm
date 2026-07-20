@@ -1,25 +1,29 @@
 #include "tmc2209.h"
 
 // tmc2209 motor drivers
-TMC2209Stepper tmc1(&TMC_SERIAL, TMC_RSENSE, TMC1_ADDR);
-TMC2209Stepper tmc2(&TMC_SERIAL, TMC_RSENSE, TMC2_ADDR);
-TMC2209Stepper tmc3(&TMC_SERIAL, TMC_RSENSE, TMC3_ADDR);
+TMC2209Stepper tmc1(&Serial1, TMC_RSENSE, 0b00);
+TMC2209Stepper tmc2(&Serial2, TMC_RSENSE, 0b00);
+TMC2209Stepper tmc3(&Serial3, TMC_RSENSE, 0b00);
 
 static void _init_driver(TMC2209Stepper &drv) {
     // tmc2209 + motor initialization
     drv.begin();
-    drv.toff(5);
+    drv.toff(4);
     drv.rms_current(RMS_CURRENT_MA);
     drv.microsteps(MICROSTEPS);
     drv.en_spreadCycle(false);
     drv.pwm_autoscale(true);
     drv.pwm_autograd(true);
+    drv.GCONF();
     drv.SGTHRS(100);
 }
 
 void tmc_init_all() {
-    // start tmc uart comm (serial1)
-    TMC_SERIAL.begin(115200);
+    // start tmc uart comms
+    Serial1.begin(57600);
+    Serial2.begin(57600);
+    Serial3.begin(57600);
+    delay(1500);
 
     // initialize shared enable pin active low
     pinMode(MOT_ENABLE_PIN, OUTPUT);
@@ -35,11 +39,16 @@ void tmc_init_all() {
     _init_driver(tmc2);
     _init_driver(tmc3);
 
-    // confirmation
+    while(Serial1.available() > 0) { Serial1.read(); } // clear serial
+    while(Serial2.available() > 0) { Serial2.read(); }
+    while(Serial3.available() > 0) { Serial3.read(); }
+
+    // confirmation (0 = success)
     Serial.println("tmc initialization success");
-    Serial.printf("[TMC] drv1 microsteps: %d\n", tmc1.microsteps());
-    Serial.printf("[TMC] drv2 microsteps: %d\n", tmc2.microsteps());
-    Serial.printf("[TMC] drv3 microsteps: %d\n", tmc3.microsteps());
+    Serial.printf("TMC1 Link: %d\n", tmc1.test_connection());
+    Serial.printf("TMC2 Link: %d\n", tmc2.test_connection());
+    Serial.printf("TMC3 Link: %d\n", tmc3.test_connection());
+
 }
 
 void tmc_enable(bool en) {

@@ -58,7 +58,7 @@ static void get_vi_home(float beta, float vi_home[3][3]) {
         float eta_i = 2.0f * i * M_PI / 3.0f;
         vi_home[i][0] = cosf(eta_i) * sinf(beta);
         vi_home[i][1] = sinf(eta_i) * sinf(beta);
-        vi_home[i][2] = cosf(beta);
+        vi_home[i][2] = -cosf(beta);
     }
 }
 
@@ -66,16 +66,16 @@ static void get_vi_home(float beta, float vi_home[3][3]) {
 // Persistent previous joint angles for continuity
 // Initialized to home position [BETA, BETA, BETA]
 static float _prev_thetas[3] = {
-    BETA,   // joint 1 home = beta (validated in Python)
-    BETA,   // joint 2 home = beta
-    BETA    // joint 3 home = beta
+    1.5708f,   // joint 1 home = beta (validated in Python)
+    1.5708f,   // joint 2 home = beta
+    1.5708f    // joint 3 home = beta
 };
 static bool _initialized = false;
 
-void ik_reset_home() {
-    _prev_thetas[0] = BETA;
-    _prev_thetas[1] = BETA;
-    _prev_thetas[2] = BETA;
+void ik_reset_home() { // RESET TO 60 FOR V2, 90 FOR V1 
+    _prev_thetas[0] = 1.5708f;
+    _prev_thetas[1] = 1.5708f;
+    _prev_thetas[2] = 1.5708f;
     _initialized = true;
 }
 
@@ -122,7 +122,16 @@ IKResult ik(float roll, float pitch, float yaw) {
 
         if (discriminant < 0.0f) {
             // No real solution — outside workspace
+            // Serial.printf("[IK FAIL] joint=%d roll=%.2f pitch=%.2f yaw=%.2f\n",
+            //     i, degrees(roll), degrees(pitch), degrees(yaw));
+            // Serial.printf("[IK FAIL] A=%.6f B=%.6f C=%.6f disc=%.6f\n",
+            //     A, B, C, discriminant);
+            // Serial.printf("[IK FAIL] prev_theta=%.4f deg\n",
+            //     degrees(_prev_thetas[i]));
+            // Serial.printf("[IK FAIL] vi=%.4f %.4f %.4f\n",
+            //     vi[0], vi[1], vi[2]);
             return result;
+
         }
 
         float theta_i;
@@ -154,8 +163,14 @@ IKResult ik(float roll, float pitch, float yaw) {
             float delta2 = theta_t2 - _prev_thetas[i];
 
             // Normalize to (-pi, pi)
-            delta1 = fmodf(delta1 + M_PI, 2.0f*M_PI) - M_PI;
-            delta2 = fmodf(delta2 + M_PI, 2.0f*M_PI) - M_PI;
+            auto normalize = [](float a) -> float {
+                a = fmodf(a + M_PI, 2.0f * M_PI);
+                if (a < 0.0f) a += 2.0f * M_PI;
+                return a - M_PI;
+            };
+
+            delta1 = normalize(delta1);
+            delta2 = normalize(delta2);
 
             // Pick smallest delta, accumulate
             if (fabsf(delta1) < fabsf(delta2)) {
@@ -167,6 +182,10 @@ IKResult ik(float roll, float pitch, float yaw) {
 
         result.theta[i] = theta_i;
         _prev_thetas[i] = theta_i;  // update branch tracking
+        // Serial.printf("[IK] prev_thetas: %.2f %.2f %.2f\n",
+        //         degrees(_prev_thetas[0]),
+        //         degrees(_prev_thetas[1]),
+        //         degrees(_prev_thetas[2]));
     }
 
     result.valid = true;

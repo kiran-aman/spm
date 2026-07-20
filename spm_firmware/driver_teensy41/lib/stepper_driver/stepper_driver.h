@@ -17,7 +17,10 @@ void stepper_init_all();
 // move to absolute step position
 void stepper_move_to(uint8_t motor, int32_t steps);
 
-void stepper_spin(uint8_t motor);
+// set stepper speed
+void stepper_set_speed(uint8_t motor, float speed_hz);
+
+void stepper_move_rel(uint8_t motor, int32_t steps);
 
 // move to absolute angle in degrees (accounts for microsteps + gear ratio)
 void stepper_move_to_deg(uint8_t motor, float degrees);

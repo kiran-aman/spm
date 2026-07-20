@@ -1,13 +1,14 @@
 #pragma once
 
-// tmc2209 uart (half-duplex)
-#define TMC_SERIAL      Serial1
-#define TMC_RX_PIN      0
-#define TMC_TX_PIN      1
+// tmc2209 uarts
+#define TMC1_RX      0 // motor 1 on serial 1
+#define TMC1_TX      1
 
-#define TMC1_ADDR       0       // MS1=LOW,  MS2=LOW
-#define TMC2_ADDR       1       // MS1=HIGH, MS2=LOW
-#define TMC3_ADDR       2       // MS1=LOW,  MS2=HIGH
+#define TMC2_RX      7 // motor 2 on serial 2
+#define TMC2_TX      8
+
+#define TMC3_RX      15 // motor 3 on serial 3
+#define TMC3_TX      14
 
 // quadrature encoder pins
 #define ENC1_A          2       // HW encoder ch1 PhaseA

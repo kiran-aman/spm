@@ -1,9 +1,5 @@
 #include "stepper_driver.h"
 
-// Steps per degree at output shaft (microsteps * gear ratio / 360)
-static constexpr float STEPS_PER_DEG =
-    (STEPS_PER_REV_MICRO * GEAR_RATIO) / 360.0f;
-
 // Stepper instances — STEP pin, DIR pin
 Stepper s1(MOT1_STEP_PIN, MOT1_DIR_PIN);
 Stepper s2(MOT2_STEP_PIN, MOT2_DIR_PIN);
@@ -22,11 +18,11 @@ void stepper_init_all() {
     Serial.println("teensystep4 initialized successfully");
 }
 
-void stepper_spin(uint8_t motor) {
+void stepper_move_rel(uint8_t motor, int32_t steps) {
     switch (motor) {
-        case 1: s1.rotateAsync(0.25); break;
-        case 2: s2.rotateAsync(0.25); break;
-        case 3: s3.rotateAsync(0.25); break;
+        case 1: s1.moveRel(steps); break;
+        case 2: s2.moveRel(steps); break;
+        case 3: s3.moveRel(steps); break;
     }
 }
 
@@ -35,9 +31,9 @@ void stepper_move_to(uint8_t motor, int32_t steps) {
     target[motor-1] = steps;
 
     switch (motor) {
-        case 1: s1.moveAbs(steps); break;
-        case 2: s2.moveAbs(steps); break;
-        case 3: s3.moveAbs(steps); break;
+        case 1: s1.moveAbsAsync(steps); break;
+        case 2: s2.moveAbsAsync(steps); break;
+        case 3: s3.moveAbsAsync(steps); break;
     }
 }
 
@@ -60,6 +56,14 @@ void stepper_stop(uint8_t motor) {
             s3.stop();
             target[2] = s3.getPosition();
             break;
+    }
+}
+
+void stepper_set_speed(uint8_t motor, float speed_hz) {
+    switch (motor) {
+        case 1: s1.setMaxSpeed(speed_hz); break;
+        case 2: s2.setMaxSpeed(speed_hz); break;
+        case 3: s3.setMaxSpeed(speed_hz); break;
     }
 }
 

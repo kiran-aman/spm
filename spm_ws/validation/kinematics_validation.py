@@ -20,18 +20,18 @@ def main():
           f"alpha2={np.degrees(spm.ALPHA2):.1f} deg  "
           f"beta={np.degrees(spm.BETA):.1f} deg")
 
-    t_f    = 5.0 # final time general
-    t_pitch = 0.25 # final time for roll command
+    t_f    = 2.0 # final time general
+    t_pitch = 2.0 # final time for roll command
 
-    roll_f = np.radians(720.0) # final positions
-    pitch_f = np.radians(40.0)
+    roll_f = np.radians(0.0) # final positions
+    pitch_f = np.radians(0.0)
     yaw_f = np.radians(0.0)
     N      = int(t_f * 100) # generally
     times  = np.linspace(0, t_f, N)
 
     # trajectory generation
     roll_traj = np.array([cubic_trajectory(t, t_f, roll_f) for t in times])
-    pitch_traj = np.array([cubic_trajectory(np.minimum(t, t_pitch), t_pitch, pitch_f) for t in times])
+    pitch_traj = np.array([cubic_trajectory(t, t_f, pitch_f) for t in times])
     yaw_traj   = np.array([cubic_trajectory(t, t_f, yaw_f) for t in times])
     theta_traj  = np.zeros((N, 3))
     rpy_fk_traj = np.zeros((N, 3))

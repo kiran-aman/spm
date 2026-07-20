@@ -5,9 +5,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from scipy.optimize import least_squares
 
 # machine parameters
-ALPHA1 = np.radians(60.0)   # actuated joint cone angle
-ALPHA2 = np.radians(51.315)   # distal link angle
-BETA   = np.radians(59.99)   # platform joint angle
+ALPHA1 = np.radians(45.0)   # actuated joint cone angle
+ALPHA2 = np.radians(69.295)   # distal link angle
+BETA   = np.radians(60.0)   # platform joint angle
 
 # rotation matrices
 def Rx(a):
@@ -72,6 +72,9 @@ def ik(roll, pitch, yaw, alpha1=ALPHA1, alpha2=ALPHA2, beta=BETA, prev_thetas=No
         A = sa1 * (ce * vi[0] + se * vi[1])
         B = sa1 * (se * vi[0] - ce * vi[1])
         C = np.cos(alpha2) + ca1 * vi[2]
+        # print("A" + str(A))
+        # print("B" + str(B))
+        # print("C" + str(C))
 
         qa, qb, qc = C+A, -2*B, C-A
         discriminant = qb**2 - 4*qa*qc
