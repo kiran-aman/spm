@@ -23,9 +23,9 @@ def main():
     t_f    = 2.0 # final time general
     t_pitch = 2.0 # final time for roll command
 
-    roll_f = np.radians(0.0) # final positions
+    roll_f = np.radians(360.0) # final positions
     pitch_f = np.radians(0.0)
-    yaw_f = np.radians(0.0)
+    yaw_f = np.radians(20.0)
     N      = int(t_f * 100) # generally
     times  = np.linspace(0, t_f, N)
 

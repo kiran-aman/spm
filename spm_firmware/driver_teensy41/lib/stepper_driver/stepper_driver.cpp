@@ -5,6 +5,11 @@ Stepper s1(MOT1_STEP_PIN, MOT1_DIR_PIN);
 Stepper s2(MOT2_STEP_PIN, MOT2_DIR_PIN);
 Stepper s3(MOT3_STEP_PIN, MOT3_DIR_PIN);
 
+bool steppers_running = false;
+bool stepper1_running = false;
+bool stepper2_running = false;
+bool stepper3_running = false;
+
 static int32_t target[4] = {0, 0, 0};
 
 void stepper_init_all() {
@@ -13,9 +18,6 @@ void stepper_init_all() {
     for (Stepper* s : {&s1, &s2, &s3}) {
         s->setMaxSpeed(MAX_SPEED_HZ);
         s->setAcceleration(MAX_ACCEL_HZ);
-
-        s->rotateAsync(); // initialize with zero speed
-        s->overrideSpeed(0.1f); // override speed to zero
     }
 
     Serial.println("teensystep4 initialized successfully");
@@ -43,6 +45,75 @@ void stepper_move_to(uint8_t motor, int32_t steps) {
 void stepper_move_to_deg(uint8_t motor, float degrees) {
     int32_t steps = (int32_t)(degrees * STEPS_PER_DEG);
     stepper_move_to(motor, steps);
+}
+
+void stepper_restart_rotation(uint8_t motor) {
+    switch (motor) {
+        case 1: 
+            if(!stepper1_running) {
+                s1.rotateAsync();
+                stepper1_running = true;
+            }
+            break;
+        case 2: 
+            if(!stepper2_running) {
+                s2.rotateAsync();
+                stepper2_running = true;
+            }
+            break;
+        case 3: 
+            if(!stepper3_running) {
+                s3.rotateAsync();
+                stepper3_running = true;
+            }
+            break;
+    }
+}
+
+void stepper_start_rotation(uint8_t motor) {
+    switch (motor) {
+        case 1: s1.rotateAsync(); break;
+        case 2: s2.rotateAsync(); break;
+        case 3: s3.rotateAsync(); break;
+    }
+}
+
+void stepper_stop_rotation(uint8_t motor) {
+    switch (motor) {
+        case 1: 
+            s1.stopAsync();
+            stepper1_running = false;
+            target[0] = s1.getPosition();
+            break;
+        case 2: 
+            s2.stopAsync();
+            stepper2_running = false;
+            target[1] = s2.getPosition();
+            break;
+        case 3: 
+            s3.stopAsync();
+            stepper3_running = false;
+            target[2] = s3.getPosition();
+            break;
+    }
+}
+
+void steppers_start_rotation() {
+    steppers_running = true;
+    s1.overrideSpeed(0.1f);
+    s2.overrideSpeed(0.1f);
+    s3.overrideSpeed(0.1f);
+
+    s1.rotateAsync();
+    s2.rotateAsync();
+    s3.rotateAsync();
+}
+
+void steppers_end_rotation() {
+    steppers_running = false;
+    s1.stopAsync();
+    s2.stopAsync();
+    s3.stopAsync();
 }
 
 void stepper_stop(uint8_t motor) {

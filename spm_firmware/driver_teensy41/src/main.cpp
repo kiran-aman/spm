@@ -35,27 +35,28 @@ void setup() {
 
     tmc_enable(true);
 }
+    static uint32_t _dbg = 0;
+
 
 // ─── Control loop ─────────────────────────────────────────
 static void control_loop() {
     if (!traj_running) return;
-    uint32_t t0, t1, t2, t3;    
 
-    t0 = micros();
     RPY target = traj.update(CTRL_DT);
     current_rpy = target;
-
-    t1 = micros();
     IKResult result = ik(target.roll, target.pitch, target.yaw);
-    // Serial.printf("[TRAJ] target: roll=%.2f pitch=%.2f yaw=%.2f deg\n",
-    //     degrees(target.roll), degrees(target.pitch), degrees(target.yaw));
-    // Serial.printf("%.4f,%.4f,%.4f\n",
-    //                 degrees(result.theta[0]),
-    //                 degrees(result.theta[1]),
-    //                 degrees(result.theta[2]));
-    // Serial.println(result.theta[0] == result.theta[1] && result.theta[1] == result.theta[2]);
+
+    // if (++_dbg % 20 == 0) {
+    //     Serial.printf("[CTRL] t=%.2f roll=%.2f pitch=%.2f yaw=%.2f | t1=%.2f t2=%.2f t3=%.2f\n",
+    //         traj.elapsed(),
+    //         degrees(target.roll),
+    //         degrees(target.pitch),
+    //         degrees(target.yaw),
+    //         degrees(result.theta[0]),
+    //         degrees(result.theta[1]),
+    //         degrees(result.theta[2]));
+    // }
  
-    t2 = micros();
     if (!result.valid) {
         Serial.println("[WARN] IK failed — stopping");
         traj_running = false;
@@ -68,54 +69,35 @@ static void control_loop() {
         float delta_deg   = target_deg - _prev_target_deg[i];
         float speed_hz = delta_deg * STEPS_PER_DEG * CTRL_HZ;
 
-        stepper_set_speed(i, fabs(speed_hz) / MAX_SPEED_HZ); // set speed as fraction of max speed
-
+        // ts4 has problems with low speeds; stop motor if speed is too low
+        if(fabsf(speed_hz) < 0.1f) {
+            stepper_stop_rotation(i);
+        }
+        else {
+            stepper_restart_rotation(i);
+            stepper_set_speed(i, speed_hz / MAX_SPEED_HZ); // set speed as fraction of max speed
+        }
         _prev_target_deg[i] = target_deg;
-        // delay(50);
     }
 
-    // stepper_move_to_deg(1, degrees(result.theta[0]) - 90.0f); // offset for home position
-    // stepper_move_to_deg(2, degrees(result.theta[1]) - 90.0f);
-    // stepper_move_to_deg(3, degrees(result.theta[2]) - 90.0f);
-    // stepper_group.move();  // non-blocking run for all motors
-
-    t3 = micros();
-
-    // // print every 100 iterations
-    // static uint32_t _dbg_count = 0;
-    // if (++_dbg_count % 100 == 0) {
-    //     Serial.printf("[TIME] traj=%luus ik=%luus stepper=%luus\n",
-    //         t1-t0, t2-t1, t3-t2);
-    // }
- 
     if (traj.is_done()) {
         traj_running = false;
+        steppers_end_rotation();
         Serial.printf("[TRAJ] Done — roll=%.2f pitch=%.2f yaw=%.2f deg\n",
             degrees(target.roll), degrees(target.pitch), degrees(target.yaw));
         Serial.printf("final time: %.3f sec\n", (millis() - timer) * 1e-3f);
         timer = millis();
     }
-    // delay(1);
 }
 
 
 void loop() {
+    // run control loop at fixed frequency
     uint32_t now = micros();
     if (now - _last_ctrl_us >= CTRL_US) {
-        // static uint32_t last_debug = 0;
-        // static uint32_t loop_count = 0;
-
-        // loop_count++;
-        // if (millis() - last_debug >= 1000) {
-        //     Serial.printf("[TIMING] loops/sec=%d CTRL_US=%d\n", loop_count, CTRL_US);
-        //     loop_count = 0;
-        //     last_debug = millis();
-        // }        
         _last_ctrl_us = now;
         control_loop();
     }
-
-
 
     if (Serial.available()) {
         char cmd = Serial.read();
@@ -139,52 +121,34 @@ void loop() {
             }
 
             case '3': {
-                RPY end = {0.0f, 0.0f, radians(180.0f)};  // 180 deg yaw spin over 2s
-                traj.set_target(current_rpy, end, 2.0f);
+                steppers_start_rotation();
+                RPY end = {0.0f, 0.0f, radians(20.0f)};  // 180 deg yaw spin over 2s
+                timer = millis();
+                traj.set_target(current_rpy, end, 1.0f);
                 traj_running = true;
                 Serial.println("[TRAJ] 180 deg yaw spin over 2s...");
                 break;
             }
 
             case '4': {
+                Serial.printf("[DEBUG] current_rpy at start: roll=%.2f pitch=%.2f yaw=%.2f\n",
+                    degrees(current_rpy.roll),
+                    degrees(current_rpy.pitch),
+                    degrees(current_rpy.yaw));
+                steppers_start_rotation();
+                RPY end = {radians(360.0f), 0.0f, radians(20.0f)};  // 180 deg roll spin over 2s
                 timer = millis();
-                RPY end = {0.0f, 0.0f, radians(180.0f)};
-                traj.set_target(current_rpy, end, 2.0f);
+                traj.set_target(current_rpy, end, 10.0f);
                 traj_running = true;
-                Serial.println("[TRAJ] 10 deg pitch over 2s...");
-                break;
-            }
-            case '5': {
-                ik_reset_home();
-                int N = 20;  // fewer points, larger steps
-                float t_f = 2.0f;
-
-                for (int k = 0; k < N; k++) {
-                    float t = (k + 1) * (t_f / N);
-                    float s = 3*pow(t/t_f, 2) - 2*pow(t/t_f, 3);
-                    float pitch = s * radians(30.0f);
-
-                    IKResult result = ik(0.0f, pitch, 0.0f);
-                    if (!result.valid) break;
-
-                    for (uint8_t i = 1; i <= 3; i++) {
-                        int32_t steps = (int32_t)((degrees(result.theta[i-1]) - 60.0f) * STEPS_PER_DEG);
-                        stepper_set_speed(i, MAX_SPEED_HZ);
-                        stepper_move_to(i, steps);
-                    }
-
-                    // wait until all motors reach target
-                    while (stepper_is_running(1) || stepper_is_running(2) || stepper_is_running(3)) {
-                        delay(1);
-                    }
-                }
+                Serial.println("[TRAJ] 180 deg roll spin over 2s...");
                 break;
             }
 
             case 'h': {
                 timer = millis();
+                steppers_start_rotation();
                 RPY end = {0.0f, 0.0f, 0.0f};
-                traj.set_target(current_rpy, end, 0.5f);
+                traj.set_target(current_rpy, end, 1.0f);
                 traj_running = true;
                 Serial.println("[TRAJ] Home over 0.5s...");
                 break;
@@ -196,30 +160,29 @@ void loop() {
                 ik_reset_home();
                 float t_f = 2.0f;
                 int N = 200;
-                float prev_thetas[3] = {radians(60.0f), radians(60.0f), radians(60.0f)};
+                float prev_thetas[3] = {radians(90.0f), radians(90.0f), radians(90.0f)};
                 
                 Serial.println("t,pitch_deg,theta1,theta2,theta3");
                 for (int k = 0; k < N; k++) {
                     float t = k * (t_f / N);
                     float s = 3*pow(t/t_f,2) - 2*pow(t/t_f,3);
-                    float pitch = s * radians(180.0f);
+                    float yaw = s * radians(20.0f);
+                    float roll = s * radians(360.0f);
                     
-                    IKResult result = ik(0.0f, 0.0f, pitch);
+                    IKResult result = ik(roll, 0.0f, yaw);
                     if (!result.valid) {
-                        Serial.printf("%.3f,%.4f,FAIL,FAIL,FAIL\n", t, degrees(pitch));
+                        Serial.printf("%.3f,%.4f,FAIL,FAIL,FAIL\n", t, degrees(roll));
                         continue;
                     }
-                    Serial.printf("%.3f,%.4f,%.4f,%.4f,%.4f\n",
+                    Serial.printf("%.3f,%.4f,%.4f,%.4f\n",
                         t,
-                        degrees(pitch),
                         degrees(result.theta[0]),
                         degrees(result.theta[1]),
                         degrees(result.theta[2]));
                 }
                 break;
             }
-            
-
+        
             case 's':
                 stepper_stop_all();
                 tmc_enable(false);

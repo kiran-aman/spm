@@ -44,9 +44,9 @@ static void mat_vec(float M[3][3], float v[3], float out[3]) {
 // Rotation matrix R = Rx(roll) * Ry(pitch) * Rz(yaw) — paper convention
 static void rotation_matrix(float roll, float pitch, float yaw, float R[3][3]) {
     float Rx_[3][3], Ry_[3][3], Rz_[3][3], tmp[3][3];
-    Rx(roll,  Rx_);
+    Rx(yaw,  Rx_);
     Ry(pitch, Ry_);
-    Rz(yaw,   Rz_);
+    Rz(roll,   Rz_);
     mat_mul(Rx_, Ry_, tmp);
     mat_mul(tmp, Rz_, R);
 }
@@ -122,14 +122,7 @@ IKResult ik(float roll, float pitch, float yaw) {
 
         if (discriminant < 0.0f) {
             // No real solution — outside workspace
-            // Serial.printf("[IK FAIL] joint=%d roll=%.2f pitch=%.2f yaw=%.2f\n",
-            //     i, degrees(roll), degrees(pitch), degrees(yaw));
-            // Serial.printf("[IK FAIL] A=%.6f B=%.6f C=%.6f disc=%.6f\n",
-            //     A, B, C, discriminant);
-            // Serial.printf("[IK FAIL] prev_theta=%.4f deg\n",
-            //     degrees(_prev_thetas[i]));
-            // Serial.printf("[IK FAIL] vi=%.4f %.4f %.4f\n",
-            //     vi[0], vi[1], vi[2]);
+            Serial.println("[WARN] IK failed — discriminant < 0");
             return result;
 
         }
@@ -182,10 +175,6 @@ IKResult ik(float roll, float pitch, float yaw) {
 
         result.theta[i] = theta_i;
         _prev_thetas[i] = theta_i;  // update branch tracking
-        // Serial.printf("[IK] prev_thetas: %.2f %.2f %.2f\n",
-        //         degrees(_prev_thetas[0]),
-        //         degrees(_prev_thetas[1]),
-        //         degrees(_prev_thetas[2]));
     }
 
     result.valid = true;
