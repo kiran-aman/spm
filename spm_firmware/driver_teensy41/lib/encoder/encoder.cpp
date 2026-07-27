@@ -6,12 +6,19 @@ static QuadEncoder enc3(3, ENC3_A, ENC3_B, 0);
 
 void encoder_init_all() {
     enc1.setInitConfig();
+    enc1.EncConfig.filterSamplePeriod = 0x1F; // Sample period clock cycles (0-255)
+    enc1.EncConfig.filterCount = 5;            // Consecutive samples required
     enc1.init();
  
     enc2.setInitConfig();
+    enc2.EncConfig.filterSamplePeriod = 0x1F; // Sample period clock cycles (0-255)
+    enc2.EncConfig.filterCount = 5;            // Consecutive samples required
+    enc2.init();
     enc2.init();
  
     enc3.setInitConfig();
+    enc3.EncConfig.filterSamplePeriod = 0x1F; // Sample period clock cycles (0-255)
+    enc3.EncConfig.filterCount = 5;            // Consecutive samples required
     enc3.init();
  
     Serial.println("stepper quadrature encoders initialization success");

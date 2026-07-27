@@ -31,12 +31,17 @@ void setup() {
     tmc_init_all();
     encoder_init_all();
     stepper_init_all();
+    
+    delay(100);
+
+    encoder_reset(1);
+    encoder_reset(2);
+    encoder_reset(3);
     ik_reset_home();
 
     tmc_enable(true);
+    Serial.println("ready");
 }
-    static uint32_t _dbg = 0;
-
 
 // ─── Control loop ─────────────────────────────────────────
 static void control_loop() {
@@ -97,6 +102,14 @@ void loop() {
     if (now - _last_ctrl_us >= CTRL_US) {
         _last_ctrl_us = now;
         control_loop();
+        float angles[3];
+                for (uint8_t i = 1; i <= 3; i++) {
+                    angles[i-1] = encoder_degrees(i);
+                }
+        Serial.printf("[ENCODER] angles: %.2f, %.2f, %.2f\n",
+                    degrees(angles[0]),
+                    degrees(angles[1]),
+                    degrees(angles[2]));
     }
 
     if (Serial.available()) {
@@ -141,6 +154,19 @@ void loop() {
                 traj.set_target(current_rpy, end, 10.0f);
                 traj_running = true;
                 Serial.println("[TRAJ] 180 deg roll spin over 2s...");
+                break;
+            }
+
+            case 'e': {
+                // read encoders
+                float angles[3];
+                for (uint8_t i = 1; i <= 3; i++) {
+                    angles[i-1] = encoder_degrees(i);
+                }
+                Serial.printf("[ENCODER] angles: %.2f, %.2f, %.2f\n",
+                    degrees(angles[0]),
+                    degrees(angles[1]),
+                    degrees(angles[2]));
                 break;
             }
 
