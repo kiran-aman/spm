@@ -51,16 +51,14 @@ static void control_loop() {
     current_rpy = target;
     IKResult result = ik(target.roll, target.pitch, target.yaw);
 
-    // if (++_dbg % 20 == 0) {
-    //     Serial.printf("[CTRL] t=%.2f roll=%.2f pitch=%.2f yaw=%.2f | t1=%.2f t2=%.2f t3=%.2f\n",
-    //         traj.elapsed(),
-    //         degrees(target.roll),
-    //         degrees(target.pitch),
-    //         degrees(target.yaw),
-    //         degrees(result.theta[0]),
-    //         degrees(result.theta[1]),
-    //         degrees(result.theta[2]));
-    // }
+    Serial.printf("[CTRL] t=%.2f t1=%.2f t2=%.2f t3=%.2f\n",
+        traj.elapsed(),
+        // degrees(target.roll),
+        // degrees(target.pitch),
+        // degrees(target.yaw),
+        degrees(result.theta[0]),
+        degrees(result.theta[1]),
+        degrees(result.theta[2]));
  
     if (!result.valid) {
         Serial.println("[WARN] IK failed — stopping");
@@ -106,10 +104,10 @@ void loop() {
                 for (uint8_t i = 1; i <= 3; i++) {
                     angles[i-1] = encoder_degrees(i);
                 }
-        Serial.printf("[ENCODER] angles: %.2f, %.2f, %.2f\n",
-                    degrees(angles[0]),
-                    degrees(angles[1]),
-                    degrees(angles[2]));
+        // Serial.printf("[ENCODER] angles: %.2f, %.2f, %.2f\n",
+        //             angles[0],
+        //             angles[1],
+        //             angles[2]);
     }
 
     if (Serial.available()) {
@@ -135,9 +133,9 @@ void loop() {
 
             case '3': {
                 steppers_start_rotation();
-                RPY end = {0.0f, 0.0f, radians(20.0f)};  // 180 deg yaw spin over 2s
+                RPY end = {radians(90.0f), 0.0f, 0.0f};  // 180 deg yaw spin over 2s
                 timer = millis();
-                traj.set_target(current_rpy, end, 1.0f);
+                traj.set_target(current_rpy, end, 2.0f);
                 traj_running = true;
                 Serial.println("[TRAJ] 180 deg yaw spin over 2s...");
                 break;
@@ -164,9 +162,9 @@ void loop() {
                     angles[i-1] = encoder_degrees(i);
                 }
                 Serial.printf("[ENCODER] angles: %.2f, %.2f, %.2f\n",
-                    degrees(angles[0]),
-                    degrees(angles[1]),
-                    degrees(angles[2]));
+                    angles[0],
+                    angles[1],
+                    angles[2]);
                 break;
             }
 

@@ -36,7 +36,7 @@
 // tmc2209 diag
 #define TMC1_DIAG_PIN   28
 #define TMC2_DIAG_PIN   29
-#define TMC3_DIAG_PIN   30
+#define TMC3_DIAG_PIN   32
 
 // receiver esp32 uart
 #define ESP32_SERIAL    Serial3
