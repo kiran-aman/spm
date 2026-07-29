@@ -13,3 +13,6 @@ void encoder_reset(uint8_t motor);
  
 // converted to deg encoder output
 float encoder_degrees(uint8_t motor);
+
+// joint space encoder output (deg) = raw encoder output (deg) / gear ratio
+float encoder_joint_degrees(uint8_t motor);

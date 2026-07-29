@@ -5,6 +5,7 @@
 #define ALPHA1  0.785398f // 45 deg -> rad
 #define ALPHA2  1.20942591f // 69.295 deg -> rad
 #define BETA    1.0472f // 60 deg -> rad
+#define HOME_ANGLE 90.0f // home position angle in degrees
 
 // motion transmission constants
 #define TEETH_INPUT     9

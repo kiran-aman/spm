@@ -51,18 +51,21 @@ void stepper_restart_rotation(uint8_t motor) {
     switch (motor) {
         case 1: 
             if(!stepper1_running) {
+                Serial.println("[CTRL] restarting motor 1 rotation...");
                 s1.rotateAsync();
                 stepper1_running = true;
             }
             break;
         case 2: 
             if(!stepper2_running) {
+                Serial.println("[CTRL] restarting motor 2 rotation...");
                 s2.rotateAsync();
                 stepper2_running = true;
             }
             break;
         case 3: 
             if(!stepper3_running) {
+                Serial.println("[Ctril] restarting motor 3");
                 s3.rotateAsync();
                 stepper3_running = true;
             }
@@ -83,34 +86,45 @@ void stepper_stop_rotation(uint8_t motor) {
         case 1: 
             s1.stopAsync();
             stepper1_running = false;
-            target[0] = s1.getPosition();
+            // target[0] = s1.getPosition();
             break;
         case 2: 
             s2.stopAsync();
             stepper2_running = false;
-            target[1] = s2.getPosition();
+            // target[1] = s2.getPosition();
             break;
         case 3: 
             s3.stopAsync();
             stepper3_running = false;
-            target[2] = s3.getPosition();
+            // target[2] = s3.getPosition();
             break;
     }
 }
 
 void steppers_start_rotation() {
+    Serial.println("[CTRL] starting steppers rotation...");
     steppers_running = true;
+    
     s1.overrideSpeed(0.1f);
     s2.overrideSpeed(0.1f);
     s3.overrideSpeed(0.1f);
 
-    s1.rotateAsync();
-    s2.rotateAsync();
-    s3.rotateAsync();
+    stepper_restart_rotation(1);
+    stepper_restart_rotation(2);
+    stepper_restart_rotation(3);
 }
 
 void steppers_end_rotation() {
+    Serial.println("[CTRL] stopping steppers rotation...");
     steppers_running = false;
+    stepper1_running = false;
+    stepper2_running = false;
+    stepper3_running = false;
+    // s1.overrideSpeed(0.1f);
+    // s2.overrideSpeed(0.1f);
+    // s3.overrideSpeed(0.1f);
+
+
     s1.stopAsync();
     s2.stopAsync();
     s3.stopAsync();
@@ -148,7 +162,12 @@ void stepper_stop_all() {
 }
 
 bool stepper_is_running(uint8_t motor) {
-    return stepper_position(motor) != target[motor-1];
+    switch (motor) {
+        case 1: return stepper1_running;
+        case 2: return stepper2_running;
+        case 3: return stepper3_running;
+        default: return false;
+    }
 }
 
 int32_t stepper_position(uint8_t motor) {
@@ -157,5 +176,19 @@ int32_t stepper_position(uint8_t motor) {
         case 2: return s2.getPosition();
         case 3: return s3.getPosition();
         default: return 0;
+    }
+}
+
+void stepper_print_status(uint8_t motor) {
+    switch (motor) {
+        case 1: 
+            Serial.printf("[MOTOR 1] pos=%d, target=%d, running=%d\n", s1.getPosition(), target[0], stepper1_running);
+            break;
+        case 2: 
+            Serial.printf("[MOTOR 2] pos=%d, target=%d, running=%d\n", s2.getPosition(), target[1], stepper2_running);
+            break;
+        case 3: 
+            Serial.printf("[MOTOR 3] pos=%d, target=%d, running=%d\n", s3.getPosition(), target[2], stepper3_running);
+            break;
     }
 }

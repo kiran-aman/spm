@@ -51,14 +51,11 @@ static void control_loop() {
     current_rpy = target;
     IKResult result = ik(target.roll, target.pitch, target.yaw);
 
-    Serial.printf("[CTRL] t=%.2f t1=%.2f t2=%.2f t3=%.2f\n",
-        traj.elapsed(),
-        // degrees(target.roll),
-        // degrees(target.pitch),
-        // degrees(target.yaw),
-        degrees(result.theta[0]),
-        degrees(result.theta[1]),
-        degrees(result.theta[2]));
+    // Serial.printf("[CTRL] t=%.2f t1=%.2f t2=%.2f t3=%.2f\n",
+    //     traj.elapsed(),
+    //     degrees(result.theta[0]),
+    //     degrees(result.theta[1]),
+    //     degrees(result.theta[2]));
  
     if (!result.valid) {
         Serial.println("[WARN] IK failed — stopping");
@@ -72,14 +69,13 @@ static void control_loop() {
         float delta_deg   = target_deg - _prev_target_deg[i];
         float speed_hz = delta_deg * STEPS_PER_DEG * CTRL_HZ;
 
-        // ts4 has problems with low speeds; stop motor if speed is too low
-        if(fabsf(speed_hz) < 0.1f) {
-            stepper_stop_rotation(i);
+        constexpr float MIN_SPEED_HZ = 5.0f; // floor instead of 0.1f threshold-stop
+        float clamped_speed_hz = speed_hz;
+        if (fabsf(clamped_speed_hz) < MIN_SPEED_HZ) {
+            clamped_speed_hz = (clamped_speed_hz < 0.0f) ? -MIN_SPEED_HZ : MIN_SPEED_HZ;
         }
-        else {
-            stepper_restart_rotation(i);
-            stepper_set_speed(i, speed_hz / MAX_SPEED_HZ); // set speed as fraction of max speed
-        }
+        stepper_set_speed(i, clamped_speed_hz / MAX_SPEED_HZ);
+
         _prev_target_deg[i] = target_deg;
     }
 
@@ -101,13 +97,9 @@ void loop() {
         _last_ctrl_us = now;
         control_loop();
         float angles[3];
-                for (uint8_t i = 1; i <= 3; i++) {
-                    angles[i-1] = encoder_degrees(i);
-                }
-        // Serial.printf("[ENCODER] angles: %.2f, %.2f, %.2f\n",
-        //             angles[0],
-        //             angles[1],
-        //             angles[2]);
+        for (uint8_t i = 1; i <= 3; i++) {
+            angles[i-1] = encoder_degrees(i);
+        }
     }
 
     if (Serial.available()) {

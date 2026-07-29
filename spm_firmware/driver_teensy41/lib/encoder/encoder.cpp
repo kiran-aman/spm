@@ -44,3 +44,7 @@ void encoder_reset(uint8_t motor) {
 float encoder_degrees(uint8_t motor) {
     return (float)encoder_read(motor) / ENCODER_CPR * 360.0f;
 }
+
+float encoder_joint_degrees(uint8_t motor) {
+    return encoder_degrees(motor) / GEAR_RATIO;
+}

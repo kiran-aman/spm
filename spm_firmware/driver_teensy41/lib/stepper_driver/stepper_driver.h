@@ -49,3 +49,4 @@ void stepper_stop_all();
 // status
 bool stepper_is_running(uint8_t motor);
 int32_t stepper_position(uint8_t motor);
+void stepper_print_status(uint8_t motor);

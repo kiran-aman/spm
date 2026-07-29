@@ -11,14 +11,14 @@
 #define TMC3_TX      14
 
 // quadrature encoder pins
-#define ENC1_A          3       // HW encoder ch1 PhaseA
-#define ENC1_B          2       // HW encoder ch1 PhaseB
+#define ENC1_A          2       // HW encoder ch1 PhaseA
+#define ENC1_B          3       // HW encoder ch1 PhaseB
 
-#define ENC2_A          4       // HW encoder ch2 PhaseA
-#define ENC2_B          5       // HW encoder ch2 PhaseB
+#define ENC2_A          5       // HW encoder ch2 PhaseA
+#define ENC2_B          4       // HW encoder ch2 PhaseB
 
-#define ENC3_A          30      // HW encoder ch3 PhaseA
-#define ENC3_B          31      // HW encoder ch3 PhaseB
+#define ENC3_A          31      // HW encoder ch3 PhaseA
+#define ENC3_B          30      // HW encoder ch3 PhaseB
 
 // step/dir pins for tmc2209
 #define MOT1_STEP_PIN   34
