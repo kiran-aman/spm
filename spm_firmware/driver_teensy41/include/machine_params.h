@@ -20,7 +20,7 @@
 #define STEPS_PER_DEG   ((STEPS_PER_REV_MICRO * GEAR_RATIO) / 360.0f)
 
 // tmc2209 parameters
-#define RMS_CURRENT_MA     500 // 500 FOR NEMA 11 V1 TEST
+#define RMS_CURRENT_MA     1000 // 500 FOR NEMA 11 V1 TEST
 #define TMC_RSENSE         0.11f
 
 // motion limits
