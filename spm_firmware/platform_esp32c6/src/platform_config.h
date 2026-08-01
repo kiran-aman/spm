@@ -6,8 +6,8 @@
 #define PIN_BNO_INT   D2   // data-ready interrupt (active-low)
 #define PIN_BNO_RST   D1   // reset (active-low)
 #define PIN_BNO_SCK   D8   // spi clock  -> bno085 scl
-#define PIN_BNO_MISO  D9   // spi MISO   -> bno085 ado
-#define PIN_BNO_MOSI  D10  // spi MOSI   -> bno085 sda
+#define PIN_BNO_MISO  D9   // spi MISO   -> bno085 sda
+#define PIN_BNO_MOSI  D10  // spi MOSI   -> bno085 ado
 // ps0, ps1 on bno085 tied directly to 3v3
 
 #define PIN_BATT_ADC  A0 
