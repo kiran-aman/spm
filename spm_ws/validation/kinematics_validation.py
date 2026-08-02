@@ -24,7 +24,7 @@ def main():
     t_pitch = 2.0 # final time for roll command
 
     roll_f = np.radians(0.0) # final positions
-    pitch_f = np.radians(0.0)
+    pitch_f = np.radians(30.0)
     yaw_f = np.radians(0.0)
     N      = int(t_f * 100) # generally
     times  = np.linspace(0, t_f, N)
@@ -89,6 +89,13 @@ def main():
               f"{np.degrees(theta_traj[k,0]):10.4f} "
               f"{np.degrees(theta_traj[k,1]):10.4f} "
               f"{np.degrees(theta_traj[k,2]):10.4f}")
+
+    theta1 = [np.degrees(theta_traj[k,0])-60.0 for k in range(0, N, 1)]
+    theta2 = [np.degrees(theta_traj[k,1])-60.0 for k in range(0, N, 1)]
+    theta3 = [np.degrees(theta_traj[k,2])-60.0 for k in range(0, N, 1)]
+    print("theta1: ", theta1)
+    print("theta2: ", theta2)
+    print("theta3: ", theta3)
 
     # plots
     fig, axes = plt.subplots(2, 2, figsize=(12, 8))
