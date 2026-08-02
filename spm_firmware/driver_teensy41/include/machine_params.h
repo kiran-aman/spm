@@ -1,16 +1,15 @@
 #pragma once
 
 // kinematics constants
-// USING V1 FOR TESTING
-#define ALPHA1  0.785398f // 45 deg -> rad
-#define ALPHA2  1.20942591f // 69.295 deg -> rad
-#define BETA    1.0472f // 60 deg -> rad
-#define HOME_ANGLE 90.0f // home position angle in degrees
+#define ALPHA1  0.872665f // 50 deg -> rad
+#define ALPHA2  0.95235636f // 54.566 deg -> rad
+#define BETA    1.22173f // 70 deg -> rad
+#define HOME_ANGLE 60.0f // home position angle in degrees
 
 // motion transmission constants
-#define TEETH_INPUT     9
-#define TEETH_OUTPUT    25
-#define GEAR_RATIO      (25.0f/9.0f)
+#define TEETH_INPUT     48
+#define TEETH_OUTPUT    60
+#define GEAR_RATIO      (60.0f/48.0f)
 
 // stepper parameters
 #define STEPS_PER_REV       200

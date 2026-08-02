@@ -64,18 +64,17 @@ static void get_vi_home(float beta, float vi_home[3][3]) {
 
 // ─── Branch tracking ───────────────────────────────────────
 // Persistent previous joint angles for continuity
-// Initialized to home position [BETA, BETA, BETA]
 static float _prev_thetas[3] = {
-    1.5708f,   // joint 1 home = beta (validated in Python)
-    1.5708f,   // joint 2 home = beta
-    1.5708f    // joint 3 home = beta
+    1.0472f,   // joint homes = 60 deg (validated in Python)
+    1.0472f,
+    1.0472f
 };
 static bool _initialized = false;
 
 void ik_reset_home() { // RESET TO 60 FOR V2, 90 FOR V1 
-    _prev_thetas[0] = 1.5708f;
-    _prev_thetas[1] = 1.5708f;
-    _prev_thetas[2] = 1.5708f;
+    _prev_thetas[0] = 1.0472f;
+    _prev_thetas[1] = 1.0472f;
+    _prev_thetas[2] = 1.0472f;
     _initialized = true;
 }
 

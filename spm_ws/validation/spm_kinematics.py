@@ -5,9 +5,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from scipy.optimize import least_squares
 
 # machine parameters
-ALPHA1 = np.radians(45.0)   # actuated joint cone angle
-ALPHA2 = np.radians(69.295)   # distal link angle
-BETA   = np.radians(60.0)   # platform joint angle
+ALPHA1 = np.radians(50.0)   # actuated joint cone angle
+ALPHA2 = np.radians(54.566)   # distal link angle
+BETA   = np.radians(70.0)   # platform joint angle
 
 # rotation matrices
 def Rx(a):
