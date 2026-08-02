@@ -17,7 +17,7 @@ static constexpr float KP = 1.0f;
 static TrajectoryInterpolator traj;
 static bool traj_running = false;
 static RPY  current_rpy  = {0.0f, 0.0f, 0.0f};
-static float _prev_target_deg[4] = {90.0f, 90.0f, 90.0f, 90.0f};
+static float _prev_target_deg[4] = {60.0f, 60.0f, 60.0f, 60.0f};
 static float max_following_error[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 
 static int timer = 0;
