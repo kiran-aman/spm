@@ -7,9 +7,9 @@
 #define HOME_ANGLE 60.0f // home position angle in degrees
 
 // motion transmission constants
-#define TEETH_INPUT     48
+#define TEETH_INPUT     40
 #define TEETH_OUTPUT    60
-#define GEAR_RATIO      (60.0f/48.0f)
+#define GEAR_RATIO      (60.0f/40.0f)
 
 // stepper parameters
 #define STEPS_PER_REV       200
