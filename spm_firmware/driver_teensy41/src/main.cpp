@@ -11,7 +11,7 @@ static constexpr uint32_t CTRL_US   = 1000000 / CTRL_HZ;
 static constexpr float    CTRL_DT   = 1.0f / CTRL_HZ;
 static uint32_t _last_ctrl_us = 0;
 
-static constexpr float KP = 1.0f;
+static constexpr float KP = 0.25f;
 
 // trajectory
 static TrajectoryInterpolator traj;
@@ -58,14 +58,17 @@ static void control_loop() {
         angles[i-1] = encoder_joint_degrees(i) + HOME_ANGLE; // add home offset to match ik result
     }
 
-    Serial.printf("[CTRL] t=%.2f t1=%.2f t2=%.2f t3=%.2f e1=%.3f e2=%.3f e3=%.3f\n",
-        traj.elapsed(),
-        degrees(result.theta[0]),
-        degrees(result.theta[1]),
-        degrees(result.theta[2]),
-        angles[0],
-        angles[1],
-        angles[2]);
+    // Serial.printf("[CTRL] t=%.2f r=%.2f p=%.2f y=%.2f t1=%.2f t2=%.2f t3=%.2f e1=%.3f e2=%.3f e3=%.3f\n",
+    //     traj.elapsed(),
+    //     degrees(current_rpy.roll),
+    //     degrees(current_rpy.pitch),
+    //     degrees(current_rpy.yaw),
+    //     degrees(result.theta[0]),
+    //     degrees(result.theta[1]),
+    //     degrees(result.theta[2]),
+    //     angles[0],
+    //     angles[1],
+    //     angles[2]);
 
     if(fabsf(degrees(result.theta[0]) - angles[0]) > max_following_error[1]) {
         max_following_error[1] = fabsf(degrees(result.theta[0]) - angles[0]);
@@ -112,16 +115,18 @@ static void control_loop() {
         stepper_set_speed(i, speed_frac);
         _prev_target_deg[i] = target_deg;
 
-        Serial.printf("[CTRL] motor %d: speed=%.2f steps/sec\n",
-            i,
-            speed_frac * MAX_SPEED_HZ);
+        // Serial.printf("[CTRL] motor %d: speed=%.2f steps/sec\n",
+        //     i,
+        //     speed_frac * MAX_SPEED_HZ);
     }
 
     if (traj.is_done()) {
         traj_running = false;
         steppers_end_rotation();
 
-        Serial.printf("[TRAJ] Done — roll=%.2f pitch=%.2f yaw=%.2f deg\n",
+        Serial.printf("[TRAJ] Done "); // terminate trial package
+
+        Serial.printf("final target: %.2f, %.2f, %.2f deg\n",
             degrees(target.roll), degrees(target.pitch), degrees(target.yaw));
 
         Serial.printf("final joint angles: %.2f, %.2f, %.2f deg\n",
@@ -168,7 +173,7 @@ void loop() {
             case '3': {
                 steppers_start_rotation();
                 float max_following_error[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-                RPY end = {radians(90.0f), 0.0f, 0.0f};  // 180 deg yaw spin over 2s
+                RPY end = {radians(360.0f), radians(20.0f), 0.0f};  // 180 deg yaw spin over 2s
                 timer = millis();
                 traj.set_target(current_rpy, end, 2.0f);
                 traj_running = true;
@@ -179,11 +184,11 @@ void loop() {
             case '4': {
                 steppers_start_rotation();
                 float max_following_error[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-                RPY end = {radians(360.0f), 0.0f, 0.0f};  // 180 deg yaw spin over 2s
+                RPY end = {0.0f, radians(30.0f), 0.0f};  // 180 deg yaw spin over 2s
                 timer = millis();
-                traj.set_target(current_rpy, end, 5.0f);
+                traj.set_target(current_rpy, end, 0.5f);
                 traj_running = true;
-                Serial.println("[TRAJ] 180 demg yaw spin over 2s...");
+                Serial.println("[TRAJ] 30 deg pitch over 0.5s...");
                 break;
             }
 

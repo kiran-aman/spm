@@ -89,6 +89,14 @@ IKResult ik(float roll, float pitch, float yaw) {
     float R[3][3];
     rotation_matrix(roll, pitch, yaw, R);
 
+    // log rotation matrix in serial for trials
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            Serial.printf("%.4f,", R[i][j]);
+        }
+    }
+    Serial.println();
+
     // Home platform joint vectors
     float vi_home[3][3];
     get_vi_home(BETA, vi_home);
