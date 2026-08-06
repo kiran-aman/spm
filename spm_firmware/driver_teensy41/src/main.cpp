@@ -11,7 +11,11 @@ static constexpr uint32_t CTRL_US   = 1000000 / CTRL_HZ;
 static constexpr float    CTRL_DT   = 1.0f / CTRL_HZ;
 static uint32_t _last_ctrl_us = 0;
 
-static constexpr float KP = 0.25f;
+static constexpr float KP = 0.75f;
+constexpr float KD = 0.3f;   // starting point — see tuning note below
+static float _prev_error_deg[4] = {0.0f, 0.0f, 0.0f, 0.0f};   // add next to _prev_target_deg
+
+static uint32_t _dbg_tick = 0;
 
 // trajectory
 static TrajectoryInterpolator traj;
@@ -93,18 +97,33 @@ static void control_loop() {
         float delta_deg   = target_deg - _prev_target_deg[i];
 
         // proportional term
-        float actual_deg  = encoder_joint_degrees(i) + HOME_ANGLE; // add home offset to match ik result
+        float actual_deg  = encoder_joint_degrees(i) + HOME_ANGLE;
         float error_deg   = target_deg - actual_deg;
         delta_deg += KP * error_deg;
+
+        // derivative term — damps velocity mismatch, helps faster trajectories
+        // track more tightly without needing to raise KP (which risks overshoot)
+        float d_error_deg = error_deg - _prev_error_deg[i];
+        delta_deg += KD * d_error_deg;
+        _prev_error_deg[i] = error_deg;
 
         // commanded speed (steps/sec)
         float speed_hz = delta_deg * STEPS_PER_DEG * CTRL_HZ;
 
+
         // clamp min speed to avoid stalling; ts4 doesn't like 0.0 async rotation speed
-        constexpr float MIN_SPEED_HZ = 5.0f; // floor instead of 0.1f threshold-stop
-        float clamped_speed_hz = speed_hz;
-        if (fabsf(clamped_speed_hz) < MIN_SPEED_HZ) {
-            clamped_speed_hz = (clamped_speed_hz < 0.0f) ? -MIN_SPEED_HZ : MIN_SPEED_HZ;
+        constexpr float MIN_SPEED_HZ = 5.0f;
+        // Deadband: below this, the requested motion is smaller than one floor-speed
+        // tick can resolve anyway — don't force movement at all in that case.
+        constexpr float DEADBAND_HZ = 0.5f;  // tune: comfortably smaller than MIN_SPEED_HZ
+
+        float clamped_speed_hz;
+        if (fabsf(speed_hz) < DEADBAND_HZ) {
+            clamped_speed_hz = 0.0f;   // genuinely negligible correction — hold, don't creep
+        } else if (fabsf(speed_hz) < MIN_SPEED_HZ) {
+            clamped_speed_hz = (speed_hz > 0.0f) ? MIN_SPEED_HZ : -MIN_SPEED_HZ;  // sign-preserving, no default-positive case left
+        } else {
+            clamped_speed_hz = speed_hz;
         }
 
         // clamp max speed to avoid 'unphysical' motion commands
@@ -118,6 +137,12 @@ static void control_loop() {
         // Serial.printf("[CTRL] motor %d: speed=%.2f steps/sec\n",
         //     i,
         //     speed_frac * MAX_SPEED_HZ);
+        // if (++_dbg_tick % 10 == 0) {
+        //     for (int i = 0; i < 3; i++) {
+        //         Serial.printf("J%d desired=%.3f actual=%.3f\n",
+        //             i+1, degrees(result.theta[i]), encoder_degrees(i+1) + HOME_ANGLE);
+        //     }
+        // }
     }
 
     if (traj.is_done()) {
@@ -138,6 +163,7 @@ static void control_loop() {
             max_following_error[1], max_following_error[2], max_following_error[3]);
         timer = millis();
     }
+    _dbg_tick++;
 }
 
 
@@ -159,8 +185,13 @@ void loop() {
                 break;
 
             case '1': {
-                Serial.println("SPINNING MOTOR 1...");
-                s1.rotateAsync(0.5);
+                Serial.println("SPINNING MOTORs...");
+                s1.overrideSpeed(1.0f);
+                s2.overrideSpeed(1.0f);
+                s3.overrideSpeed(1.0f);
+                s1.rotateAsync();
+                s2.rotateAsync();
+                s3.rotateAsync();
                 break;
             }
 
@@ -173,9 +204,9 @@ void loop() {
             case '3': {
                 steppers_start_rotation();
                 float max_following_error[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-                RPY end = {radians(360.0f), radians(20.0f), 0.0f};  // 180 deg yaw spin over 2s
+                RPY end = {0.0f, 0.0f, radians(30.0f)};  // 180 deg yaw spin over 2s
                 timer = millis();
-                traj.set_target(current_rpy, end, 2.0f);
+                traj.set_target(current_rpy, end, 0.5f);
                 traj_running = true;
                 Serial.println("[TRAJ] 180 deg yaw spin over 2s...");
                 break;
