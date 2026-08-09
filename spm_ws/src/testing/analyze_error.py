@@ -253,7 +253,7 @@ def main():
         if dt > args.max_dt:
             skipped += 1
             continue
-        R_a = actual_mats[idx]
+        R_a = actual_mats[idx].T # THIS MIGHT NOT BE RIGHT
         if correction_side == "right":
             R_a = R_a @ correction
         else:
