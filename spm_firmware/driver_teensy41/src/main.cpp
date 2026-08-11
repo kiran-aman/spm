@@ -11,8 +11,9 @@ static constexpr uint32_t CTRL_US   = 1000000 / CTRL_HZ;
 static constexpr float    CTRL_DT   = 1.0f / CTRL_HZ;
 static uint32_t _last_ctrl_us = 0;
 
-static constexpr float KP = 0.75f;
-constexpr float KD = 0.3f;   // starting point — see tuning note below
+static constexpr float KP = 0.1f; // 0.75f
+// constexpr float KD = 0.3f;   // starting point — see tuning note below
+constexpr float KD = 0.1f;   // starting point — see tuning note below
 static float _prev_error_deg[4] = {0.0f, 0.0f, 0.0f, 0.0f};   // add next to _prev_target_deg
 
 static uint32_t _dbg_tick = 0;
@@ -119,7 +120,7 @@ static void control_loop() {
 
         float clamped_speed_hz;
         if (fabsf(speed_hz) < DEADBAND_HZ) {
-            clamped_speed_hz = 0.0f;   // genuinely negligible correction — hold, don't creep
+            clamped_speed_hz = 2.0f;
         } else if (fabsf(speed_hz) < MIN_SPEED_HZ) {
             clamped_speed_hz = (speed_hz > 0.0f) ? MIN_SPEED_HZ : -MIN_SPEED_HZ;  // sign-preserving, no default-positive case left
         } else {
@@ -215,9 +216,9 @@ void loop() {
             case '4': {
                 steppers_start_rotation();
                 float max_following_error[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-                RPY end = {0.0f, radians(30.0f), 0.0f};  // 180 deg yaw spin over 2s
+                RPY end = {radians(180.0f), radians(15.0f), radians(15.0f)};  // 180 deg yaw spin over 2s
                 timer = millis();
-                traj.set_target(current_rpy, end, 0.5f);
+                traj.set_target(current_rpy, end, 3.0f);
                 traj_running = true;
                 Serial.println("[TRAJ] 30 deg pitch over 0.5s...");
                 break;
