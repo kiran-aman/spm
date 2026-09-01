@@ -35,3 +35,15 @@
 <div align="center">
   <img width="1000" alt="image" src="https://github.com/user-attachments/assets/87804548-89f3-4ffc-aa93-ebdca8287da7" />
 </div>
+<br>
+
+### matlab simulation digital twin (left), parametric design of drivetrain (middle), manufactured v2 prototype (right)
+<div align="center">
+  <img width="5420" height="2068" alt="image" src="https://github.com/user-attachments/assets/bafc4a74-7106-4963-92e6-320cc8fb1d78" />
+</div>
+<br>
+
+### commanded (solid) vs actual (dashed) rpy euler angles; max following error 7.30 deg for a 180 deg yaw over 2 sec
+<div align="center">
+  <img width="2500" height="1250" alt="image" src="https://github.com/user-attachments/assets/ece2173a-6f80-4fcc-8c7b-ecb031346dc9" />
+</div>
